@@ -12,7 +12,8 @@ app.get("/", (req, res) => {
 app.post("/chat", async (req, res) => {
   try {
     const response = await fetch(
-      https://openrouter.ai/api/v1/chat/completions
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
       {
         method: "POST",
         headers: {
