@@ -1,3 +1,4 @@
+
 const express = require("express");
 const cors = require("cors");
 
@@ -14,14 +15,13 @@ app.post("/chat", async (req, res) => {
     const response = await fetch(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-      {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${process.env.AI_API_KEY}`
         },
         body: JSON.stringify({
-          model: "gpt-4o-mini",
+          model: "openai/gpt-4o-mini",
           messages: req.body.messages
         })
       }
@@ -30,6 +30,7 @@ app.post("/chat", async (req, res) => {
     const data = await response.json();
     res.status(response.status).json(data);
   } catch (error) {
+    console.error("Begal error:", error);
     res.status(500).json({ error: "Begal connection failed" });
   }
 });
@@ -38,3 +39,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Begal server started");
 });
+
