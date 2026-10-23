@@ -1,44 +1,211 @@
-39 lines (34 loc) · 927 Bytes
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d1b">
+  <title>بگال | دستیار هوشمند</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #080d1b;
+      color: #f4f7ff;
+      font-family: Tahoma, Arial, sans-serif;
+      min-height: 100vh;
+    }
+    .app {
+      max-width: 760px;
+      margin: auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+    header {
+      text-align: center;
+      padding: 18px 8px;
+      border-bottom: 1px solid #26344d;
+    }
+    h1 { color: #48a8ff; margin: 0 0 10px; font-size: 30px; }
+    header p { color: #aab8d3; margin: 6px 0; }
+    #counter { color: #62c5ff; font-size: 14px; }
+    #chat {
+      flex: 1;
+      padding: 18px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .message {
+      max-width: 92%;
+      padding: 13px 15px;
+      border-radius: 15px;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .bot {
+      align-self: flex-start;
+      background: #141f35;
+      border: 1px solid #263b5b;
+    }
+    .user {
+      align-self: flex-end;
+      background: #075ca8;
+    }
+    form {
+      display: flex;
+      gap: 9px;
+      padding: 12px 0;
+      position: sticky;
+      bottom: 0;
+      background: #080d1b;
+    }
+    textarea {
+      flex: 1;
+      min-width: 0;
+      min-height: 50px;
+      max-height: 140px;
+      resize: vertical;
+      border: 1px solid #2a3b59;
+      border-radius: 13px;
+      background: #111a2c;
+      color: white;
+      padding: 13px;
+      font: inherit;
+    }
+    button {
+      border: 0;
+      border-radius: 13px;
+      background: #1689ed;
+      color: white;
+      padding: 0 18px;
+      font: inherit;
+      font-weight: bold;
+    }
+    button:disabled { opacity: .55; }
+    footer {
+      text-align: center;
+      border-top: 1px solid #26344d;
+      padding: 14px 0;
+      color: #aab8d3;
+      font-size: 13px;
+      line-height: 2;
+    }
+    footer strong { color: #63baff; }
+    .note { color: #8292ad; font-size: 11px; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Begal</h1>
+      <p>دستیار هوشمند فارسی شما</p>
+      <p id="counter">۱۰ سؤال رایگان باقی مانده</p>
+    </header>
 
-Code
+    <section id="chat" aria-live="polite">
+      <div class="message bot">سلام! من بگال هستم. چه سؤالی داری؟</div>
+    </section>
 
-Blame
-const express = require("express");
-const cors = require("cors");
+    <form id="form">
+      <textarea id="input" placeholder="پیامت را بنویس..." required></textarea>
+      <button id="send" type="submit">ارسال</button>
+    </form>
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    <footer>
+      <strong>اشتراک بگال</strong><br>
+      یک ماه: ۳۰۰٬۰۰۰ تومان<br>
+      سه ماه: ۵۰۰٬۰۰۰ تومان<br>
+      یک سال: ۱٬۵۰۰٬۰۰۰ تومان
+      <p class="note">پرداخت آنلاین هنوز فعال نشده است.</p>
+    </footer>
+  </main>
 
-app.get("/", (req, res) => {
-  res.send("Begal server is running!");
-});
+  <script>
+    const API_URL = "https://begal.onrender.com/chat";
+    const chat = document.getElementById("chat");
+    const form = document.getElementById("form");
+    const input = document.getElementById("input");
+    const send = document.getElementById("send");
+    const counter = document.getElementById("counter");
 
-app.post("/chat", async (req, res) => {
-  try {
-    const response = await fetch(
-      "https://1xai.ir/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${process.env.AI_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "gpt-4o-mini",
-          messages: req.body.messages
-        })
+    let remaining = Number(localStorage.getItem("begal_remaining"));
+    if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
+      remaining = 10;
+    }
+
+    const history = [];
+
+    function updateCounter() {
+      counter.textContent = remaining + " سؤال رایگان باقی مانده";
+    }
+
+    function addMessage(text, who) {
+      const div = document.createElement("div");
+      div.className = "message " + who;
+      div.textContent = text;
+      chat.appendChild(div);
+      div.scrollIntoView({ behavior: "smooth", block: "end" });
+      return div;
+    }
+
+    updateCounter();
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const question = input.value.trim();
+      if (!question || send.disabled) return;
+
+      if (remaining <= 0) {
+        addMessage(
+          "سهمیهٔ ۱۰ سؤال رایگان شما تمام شده است. برای ادامه باید اشتراک فعال شود. پرداخت آنلاین هنوز فعال نیست.",
+          "bot"
+        );
+        return;
       }
-    );
 
-    const data = await response.json();
-    res.status(response.status).json(data);
-  } catch (error) {
-    res.status(500).json({ error: "Begal connection failed" });
-  }
-});
+      addMessage(question, "user");
+      input.value = "";
+      send.disabled = true;
+      send.textContent = "صبر کن...";
+      history.push({ role: "user", content: question });
+      const loading = addMessage("در حال دریافت پاسخ...", "bot");
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log("Begal server started");
-});
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ messages: history })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          const detail = data.error?.message || data.error || "خطای اتصال";
+          throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+        }
+
+        const answer = data.choices?.[0]?.message?.content;
+        if (!answer) throw new Error("پاسخ معتبری از سرویس دریافت نشد.");
+
+        loading.textContent = answer;
+        history.push({ role: "assistant", content: answer });
+        remaining--;
+        localStorage.setItem("begal_remaining", String(remaining));
+        updateCounter();
+      } catch (error) {
+        loading.textContent =
+          "فعلاً پاسخ دریافت نشد.\n" + error.message +
+          "\nاتصال کلید API در سرور باید بررسی شود.";
+        history.pop();
+      } finally {
+        send.disabled = false;
+        send.textContent = "ارسال";
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>
