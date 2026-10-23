@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<!DOCTYPE html><html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080d1b">
-  <title>بگال | دستیار هوشمند</title>
-  <style>
-    * { box-sizing: border-box; }
+  <title>بگال | دستیار هوشمند</title>  <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       background: #080d1b;
@@ -14,6 +15,7 @@
       font-family: Tahoma, Arial, sans-serif;
       min-height: 100vh;
     }
+
     .app {
       max-width: 760px;
       margin: auto;
@@ -22,14 +24,29 @@
       flex-direction: column;
       padding: 16px;
     }
+
     header {
       text-align: center;
       padding: 18px 8px;
       border-bottom: 1px solid #26344d;
     }
-    h1 { color: #48a8ff; margin: 0 0 10px; font-size: 30px; }
-    header p { color: #aab8d3; margin: 6px 0; }
-    #counter { color: #62c5ff; font-size: 14px; }
+
+    h1 {
+      color: #48a8ff;
+      margin: 0 0 10px;
+      font-size: 30px;
+    }
+
+    header p {
+      color: #aab8d3;
+      margin: 6px 0;
+    }
+
+    #counter {
+      color: #62c5ff;
+      font-size: 14px;
+    }
+
     #chat {
       flex: 1;
       padding: 18px 0;
@@ -37,6 +54,7 @@
       flex-direction: column;
       gap: 12px;
     }
+
     .message {
       max-width: 92%;
       padding: 13px 15px;
@@ -45,15 +63,18 @@
       white-space: pre-wrap;
       overflow-wrap: anywhere;
     }
+
     .bot {
       align-self: flex-start;
       background: #141f35;
       border: 1px solid #263b5b;
     }
+
     .user {
       align-self: flex-end;
       background: #075ca8;
     }
+
     form {
       display: flex;
       gap: 9px;
@@ -62,6 +83,7 @@
       bottom: 0;
       background: #080d1b;
     }
+
     textarea {
       flex: 1;
       min-width: 0;
@@ -75,6 +97,7 @@
       padding: 13px;
       font: inherit;
     }
+
     button {
       border: 0;
       border-radius: 13px;
@@ -83,8 +106,13 @@
       padding: 0 18px;
       font: inherit;
       font-weight: bold;
+      cursor: pointer;
     }
-    button:disabled { opacity: .55; }
+
+    button:disabled {
+      opacity: .55;
+    }
+
     footer {
       text-align: center;
       border-top: 1px solid #26344d;
@@ -93,119 +121,197 @@
       font-size: 13px;
       line-height: 2;
     }
-    footer strong { color: #63baff; }
-    .note { color: #8292ad; font-size: 11px; }
-  </style>
-</head>
-<body>
-  <main class="app">
-    <header>
-      <h1>Begal</h1>
-      <p>دستیار هوشمند فارسی شما</p>
-      <p id="counter">۱۰ سؤال رایگان باقی مانده</p>
-    </header>
 
-    <section id="chat" aria-live="polite">
-      <div class="message bot">سلام! من بگال هستم. چه سؤالی داری؟</div>
-    </section>
+    footer strong {
+      color: #63baff;
+    }
 
-    <form id="form">
-      <textarea id="input" placeholder="پیامت را بنویس..." required></textarea>
-      <button id="send" type="submit">ارسال</button>
-    </form>
+    .note {
+      color: #8292ad;
+      font-size: 11px;
+    }
+  </style></head><body>
+  <main class="app"><header>
+  <h1>Begal</h1>
+  <p>دستیار هوشمند فارسی شما</p>
+  <p id="counter">۱۰ سؤال رایگان باقی مانده</p>
+</header>
 
-    <footer>
-      <strong>اشتراک بگال</strong><br>
-      یک ماه: ۳۰۰٬۰۰۰ تومان<br>
-      سه ماه: ۵۰۰٬۰۰۰ تومان<br>
-      یک سال: ۱٬۵۰۰٬۰۰۰ تومان
-      <p class="note">پرداخت آنلاین هنوز فعال نشده است.</p>
-    </footer>
-  </main>
+<section id="chat" aria-live="polite">
+  <div class="message bot">
+    سلام! من بگال هستم. چه سؤالی داری؟
+  </div>
+</section>
 
-  <script>
+<form id="form">
+  <textarea
+    id="input"
+    placeholder="پیامت را بنویس..."
+    required
+  ></textarea>
+
+  <button id="send" type="submit">ارسال</button>
+</form>
+
+<footer>
+  <strong>اشتراک بگال</strong><br>
+  یک ماه: ۳۰۰٬۰۰۰ تومان<br>
+  سه ماه: ۵۰۰٬۰۰۰ تومان<br>
+  یک سال: ۱٬۵۰۰٬۰۰۰ تومان
+
+  <p class="note">
+    پرداخت آنلاین هنوز فعال نشده است.
+  </p>
+</footer>
+
+  </main>  <script>
     const API_URL = "https://begal.onrender.com/chat";
+
     const chat = document.getElementById("chat");
     const form = document.getElementById("form");
     const input = document.getElementById("input");
     const send = document.getElementById("send");
     const counter = document.getElementById("counter");
 
-    let remaining = Number(localStorage.getItem("begal_remaining"));
-    if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
+    let remaining = Number(
+      localStorage.getItem("begal_remaining")
+    );
+
+    if (
+      !Number.isInteger(remaining) ||
+      remaining < 0 ||
+      remaining > 10
+    ) {
       remaining = 10;
     }
 
     const history = [];
 
     function updateCounter() {
-      counter.textContent = remaining + " سؤال رایگان باقی مانده";
+      counter.textContent =
+        remaining + " سؤال رایگان باقی مانده";
     }
 
     function addMessage(text, who) {
       const div = document.createElement("div");
+
       div.className = "message " + who;
       div.textContent = text;
+
       chat.appendChild(div);
-      div.scrollIntoView({ behavior: "smooth", block: "end" });
+
+      div.scrollIntoView({
+        behavior: "smooth",
+        block: "end"
+      });
+
       return div;
     }
 
     updateCounter();
 
-    form.addEventListener("submit", async (event) => {
+    form.addEventListener("submit", async function(event) {
       event.preventDefault();
+
       const question = input.value.trim();
-      if (!question || send.disabled) return;
+
+      if (!question || send.disabled) {
+        return;
+      }
 
       if (remaining <= 0) {
         addMessage(
-          "سهمیهٔ ۱۰ سؤال رایگان شما تمام شده است. برای ادامه باید اشتراک فعال شود. پرداخت آنلاین هنوز فعال نیست.",
+          "سهمیهٔ ۱۰ سؤال رایگان شما تمام شده است. " +
+          "برای ادامه باید اشتراک فعال شود. " +
+          "پرداخت آنلاین هنوز فعال نیست.",
           "bot"
         );
+
         return;
       }
 
       addMessage(question, "user");
+
       input.value = "";
       send.disabled = true;
       send.textContent = "صبر کن...";
-      history.push({ role: "user", content: question });
-      const loading = addMessage("در حال دریافت پاسخ...", "bot");
+
+      history.push({
+        role: "user",
+        content: question
+      });
+
+      const loading = addMessage(
+        "در حال دریافت پاسخ...",
+        "bot"
+      );
 
       try {
         const response = await fetch(API_URL, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ messages: history })
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            messages: history
+          })
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-          const detail = data.error?.message || data.error || "خطای اتصال";
-          throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+          const detail =
+            data.error?.message ||
+            data.error ||
+            "خطای اتصال";
+
+          throw new Error(
+            typeof detail === "string"
+              ? detail
+              : JSON.stringify(detail)
+          );
         }
 
-        const answer = data.choices?.[0]?.message?.content;
-        if (!answer) throw new Error("پاسخ معتبری از سرویس دریافت نشد.");
+        const answer =
+          data.choices?.[0]?.message?.content;
+
+        if (!answer) {
+          throw new Error(
+            "پاسخ معتبری از سرویس دریافت نشد."
+          );
+        }
 
         loading.textContent = answer;
-        history.push({ role: "assistant", content: answer });
+
+        history.push({
+          role: "assistant",
+          content: answer
+        });
+
         remaining--;
-        localStorage.setItem("begal_remaining", String(remaining));
+
+        localStorage.setItem(
+          "begal_remaining",
+          String(remaining)
+        );
+
         updateCounter();
+
       } catch (error) {
         loading.textContent =
-          "فعلاً پاسخ دریافت نشد.\n" + error.message +
+          "فعلاً پاسخ دریافت نشد.\n" +
+          error.message +
           "\nاتصال کلید API در سرور باید بررسی شود.";
+
         history.pop();
+
       } finally {
         send.disabled = false;
         send.textContent = "ارسال";
         input.focus();
       }
     });
-  </script>
-</body>
+  </script></body>
 </html>
