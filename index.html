@@ -110,7 +110,7 @@
     }
 
     button:disabled {
-      opacity: .55;
+      opacity: 0.55;
     }
 
     footer {
@@ -138,9 +138,7 @@
 </header>
 
 <section id="chat" aria-live="polite">
-  <div class="message bot">
-    سلام! من بگال هستم. چه سؤالی داری؟
-  </div>
+  <div class="message bot">سلام! من بگال هستم. چه سؤالی داری؟</div>
 </section>
 
 <form id="form">
@@ -159,9 +157,7 @@
   سه ماه: ۵۰۰٬۰۰۰ تومان<br>
   یک سال: ۱٬۵۰۰٬۰۰۰ تومان
 
-  <p class="note">
-    پرداخت آنلاین هنوز فعال نشده است.
-  </p>
+  <p class="note">پرداخت آنلاین هنوز فعال نشده است.</p>
 </footer>
 
   </main>  <script>
@@ -226,7 +222,6 @@
           "پرداخت آنلاین هنوز فعال نیست.",
           "bot"
         );
-
         return;
       }
 
@@ -249,11 +244,9 @@
       try {
         const response = await fetch(API_URL, {
           method: "POST",
-
           headers: {
             "Content-Type": "application/json"
           },
-
           body: JSON.stringify({
             messages: history
           })
