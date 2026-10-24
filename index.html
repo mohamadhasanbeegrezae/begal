@@ -180,10 +180,12 @@ footer strong { color: #63baff; }
       const question = input.value.trim();
 
       if (!question || send.disabled) return;
+      if (remaining <= 0) {
+addMessage("سهمیهٔ ۱۰ سؤال رایگان شما تمام شده است. برای ادامه باید اشتراک فعال شود.", "bot");
+return;
+      }
 
-    if (remaining <= 0) {
-  remaining = 10;
-    }
+    
 
       addMessage(question, "user");
       input.value = "";
