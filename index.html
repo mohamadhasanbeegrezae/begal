@@ -151,10 +151,14 @@ footer strong { color: #63baff; }
     const send = document.getElementById("send");
     const counter = document.getElementById("counter");
 
-    let remaining = Number(localStorage.getItem("begal_remaining"));
+    let remaining = Number(localStorage.getItem("begal_remaining"))
+    const savedRemaining = localStorage.getItem("begal_remaining");
+let remaining = savedRemaining === null ? 10 : Number(savedRemaining);
 
-    if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
-      remaining = 10;
+if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
+remaining = 0;
+localStorage.setItem("begal_remaining", "0");
+    }
     }
 
     const history = [];
