@@ -158,13 +158,15 @@ if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
   remaining = 0;
   localStorage.setItem("begal_remaining", "0");
 }
-    const savedRemaining = localStorage.getItem("begal_remaining");
+const savedRemaining = localStorage.getItem("begal_remaining");
 let remaining = savedRemaining === null ? 10 : Number(savedRemaining);
 
 if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
-remaining = 0;
-localStorage.setItem("begal_remaining", "0");
-    }
+  remaining = 0;
+  localStorage.setItem("begal_remaining", "0");
+}
+
+const history = [];
     }
 
     const history = [];
