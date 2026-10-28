@@ -4,19 +4,94 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>بگال | دستیار هوشمند</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#080d18;color:#f4f7ff;font-family:Tahoma,Arial,sans-serif}
-header{background:#101a2d;padding:18px;text-align:center;border-bottom:1px solid #263854}
-header h1{margin:0;color:#54a2ff;font-size:27px}
-header p{margin:8px 0 0;color:#aebbd0;font-size:13px}
+body{
+  margin:0;
+  background:#080d18;
+  color:#f4f7ff;
+  font-family:Tahoma,Arial,sans-serif
+}
+header{
+  background:#101a2d;
+  padding:20px;
+  text-align:center;
+  border-bottom:1px solid #263854
+}
+header h1{margin:0;color:#54a2ff;font-size:28px}
+header p{color:#b5c4da;font-size:13px}
 main{max-width:700px;margin:auto;padding:16px}
-.panel{background:#101a2b;border:1px solid #253750;border-radius:16px;padding:16px;margin-bottom:15px}
-h2{font-size:18px;margin-top:0}
-button{border:0;border-radius:10px;padding:12px 15px;font-family:inherit;font-size:14px;cursor:pointer}
+.panel{
+  background:#101a2b;
+  border:1px solid #253750;
+  border-radius:16px;
+  padding:16px;
+  margin-bottom:16px
+}
+h2{font-size:18px}
+input,textarea{
+  display:block;
+  width:100%;
+  background:#080f1d;
+  color:white;
+  border:1px solid #344761;
+  border-radius:10px;
+  padding:13px;
+  font-family:inherit;
+  font-size:15px;
+  margin:9px 0
+}
+button{
+  border:0;
+  border-radius:10px;
+  padding:13px;
+  font-family:inherit;
+  font-size:14px;
+  cursor:pointer
+}
 .primary{background:#2678ed;color:white}
 .secondary{background:#23344f;color:white}
-input,textarea{width:100%;background:#080f1d;color:white;border:1px solid #344761;border-radius:10px;padding:12px;font-family:inherit;font-size:15px;margin:7px 0}
-#messages{display:flex;flex-direction:column;gap:10px;min-height:100px;max-height:42vh;overflow:auto}
-.msg{padding:12px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9}
-.user{background:#17345a;align-self:flex-start;max-width:
+.row{display:flex;gap:8px;margin-top:12px}
+.row button{flex:1}
+.price{
+  padding:12px;
+  border:1px solid #344761;
+  border-radius:10px;
+  margin:8px 0
+}
+.muted,small{color:#aebbd0;line-height:1.9}
+#messages{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-height:100px;
+  max-height:400px;
+  overflow:auto;
+  margin:12px 0
+}
+.msg{
+  padding:12px;
+  border-radius:12px;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  line-height:1.9
+}
+.user{background:#17345a;align-self:flex-start}
+.bot{background:#1a2638;align-self:stretch}
+#preview{max-width:100%;max-height:220px;display:none;margin:10px 0}
+#status{color:#83c5ff;line-height:1.9}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>بگال</h1>
+  <p>دستیار هوشمند فارسی شما</p>
+</header>
+
+<main>
+
+<section class="panel">
+  <h2>اشتراک بگال</h2>
+  <p class="muted">طرح
