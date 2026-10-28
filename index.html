@@ -3,217 +3,328 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>بگال | دستیار هوشمند</title>
+<meta name="theme-color" content="#080d18">
+<title>بگال | دستیار هوشمند فارسی</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#080d18;color:#f1f5f9;font-family:Tahoma,Arial,sans-serif}
-header{background:#101a2c;padding:20px;text-align:center;border-bottom:1px solid #293b56}
-header h1{color:#60a5fa;margin:0;font-size:30px}
-main{max-width:700px;margin:auto;padding:15px}
-.card{background:#111c2e;border:1px solid #293b56;border-radius:16px;padding:18px;margin-bottom:16px}
-.card-number{direction:ltr;text-align:center;font-size:22px;font-weight:bold;color:#93c5fd}
-.count{font-size:18px;color:#93c5fd;font-weight:bold}
-button{border:0;border-radius:10px;padding:13px 16px;background:#2563eb;color:white;font:inherit;font-weight:bold;cursor:pointer}
-button:disabled{opacity:.5}
-textarea,input{font:inherit;color:white;background:#081222;border:1px solid #3b506e;border-radius:10px;padding:12px}
-textarea{width:100%;min-height:80px;resize:vertical}
-input[type=file]{width:100%;margin:12px 0}
-#chat{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;margin:15px 0}
-.msg{padding:12px;border-radius:12px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
-.bot{background:#1b293d}
-.user{background:#173b65;align-self:flex-start;max-width:90%}
-form{display:grid;gap:10px}
-.price{background:#0c1627;border:1px solid #354966;border-radius:12px;padding:14px;margin:10px 0}
-.price strong{color:#93c5fd}
-.small{font-size:13px;color:#a8b5c9;line-height:1.9}
-#notice,#receiptStatus{color:#fbbf24;line-height:1.9}
-hr{border:0;border-top:1px solid #293b56;margin:18px 0}
+:root {
+  --bg: #080d18;
+  --panel: #121d30;
+  --border: #293954;
+  --blue: #2864e8;
+  --light: #91c4ff;
+  --text: #f4f7ff;
+  --muted: #aab5c8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: Tahoma, Arial, sans-serif;
+  line-height: 1.8;
+}
+
+header {
+  text-align: center;
+  background: #111a2d;
+  border-bottom: 1px solid var(--border);
+  padding: 22px 14px;
+}
+
+header h1 {
+  margin: 0;
+  color: #70aaff;
+  font-size: 36px;
+}
+
+header p {
+  margin: 5px 0 0;
+}
+
+main {
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+  padding: 15px 12px 35px;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 14px;
+  min-width: 0;
+}
+
+h2 {
+  font-size: 19px;
+  margin: 0 0 12px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.center {
+  text-align: center;
+}
+
+.card-number {
+  direction: ltr;
+  text-align: center;
+  color: var(--light);
+  font-size: clamp(21px, 5.8vw, 31px);
+  font-weight: bold;
+  overflow-wrap: anywhere;
+  margin: 12px 0;
+}
+
+button {
+  width: 100%;
+  min-height: 45px;
+  padding: 10px 13px;
+  background: var(--blue);
+  color: white;
+  border: 0;
+  border-radius: 11px;
+  font: inherit;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+/* بخش اشتراک‌ها؛ همیشه قابل مشاهده */
+.plans {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.plan {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 11px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: #0d1728;
+  cursor: pointer;
+  width: 100%;
+  min-width: 0;
+}
+
+.plan input {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  accent-color: var(--blue);
+}
+
+.plan span {
+  min-width: 0;
+}
+
+.plan strong {
+  display: block;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.price {
+  display: block;
+  color: var(--light);
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+input[type="file"],
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 6px 0 12px;
+  background: #0b1322;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 85px;
+  resize: vertical;
+}
+
+#messages {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-bottom: 12px;
+}
+
+.msg {
+  background: #1b2a40;
+  border-radius: 13px;
+  padding: 11px 13px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.msg.user {
+  background: #1d3970;
+}
+
+.status {
+  font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+.ok {
+  color: #9de5b1;
+}
+
+.error {
+  color: #ffb4b4;
+}
+
+.notice {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 11px;
+  background: #2a2415;
+  border: 1px solid #655326;
+  color: #ffe7a6;
+  font-size: 12px;
+}
+
+@media (min-width: 500px) {
+  main {
+    padding: 20px 16px 40px;
+  }
+
+  .card {
+    padding: 20px;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>بگال</h1>
   <p>دستیار هوشمند فارسی شما</p>
-</header>یک ماهه: ۳۰۰ هزار تومان
-سه ماهه: ۵۰۰ هزار تومان
-یک ساله: ۱ میلیون و ۵۰۰ هزار تومان
+</header>
 
 <main>
+
+  <!-- شماره کارت -->
   <section class="card">
-    <h3>💳 شماره کارت پرداخت</h3>
-    <div class="card-number">6037991235238288</div>
-    <p style="text-align:center">به نام: محمد حسن بیگرضایی</p>
-    <button id="copyCard" type="button" style="width:100%">کپی شماره کارت</button>
+    <h2>💳 شماره کارت پرداخت</h2>
+
+    <div class="card-number" id="cardNumber">6037991235238288</div>
+
+    <p class="center">به نام: محمد حسن بیگرضایی</p>
+
+    <button type="button" id="copyCard">
+      کپی شماره کارت
+    </button>
+
+    <p id="copyStatus" class="status center" aria-live="polite"></p>
   </section>
 
-  <section class="card">
-    <div class="count">سؤال رایگان باقی‌مانده: <span id="remaining">۱۰</span> از ۱۰</div>
-    <p class="small">پس از دریافت موفق هر پاسخ، یک سؤال کم می‌شود.</p>
-  </section>
-
-  <section class="card">
-    <h3>💬 گفت‌وگو با بگال</h3>
-    <div id="chat" aria-live="polite">
-      <div class="msg bot">سلام! من بگال هستم. سؤالت را بنویس.</div>
-    </div>
-    <form id="chatForm">
-      <textarea id="question" placeholder="سؤالت را بنویس..." required></textarea>
-      <button id="sendBtn" type="submit">ارسال سؤال</button>
-    </form>
-    <p id="notice" role="status"></p>
-  </section>
-
-  <section class="card">
+  <!-- اشتراک‌ها -->
+  <section class="card" id="subscriptions">
     <h2>⭐ اشتراک‌های بگال</h2>
-    <p>هر سه طرح اشتراک همیشه در این بخش نمایش داده می‌شوند.</p>
-    <form id="paymentForm">
-      <div class="price">
-        <label><input type="radio" name="plan" value="month" required>
-        اشتراک یک‌ماهه — <strong>۳۰۰٬۰۰۰ تومان</strong></label>
-      </div>
-      <div class="price">
-        <label><input type="radio" name="plan" value="three_months">
-        اشتراک سه‌ماهه — <strong>۵۰۰٬۰۰۰ تومان</strong></label>
-      </div>
-      <div class="price">
-        <label><input type="radio" name="plan" value="year">
-        اشتراک یک‌ساله — <strong>۱٬۵۰۰٬۰۰۰ تومان</strong></label>
-      </div>
 
-      <p class="small">پس از واریز مبلغ طرح انتخابی، تصویر رسید را انتخاب و ارسال کن.</p>
-      <label for="receipt">انتخاب تصویر فیش پرداخت:</label>
-      <input id="receipt" type="file" accept="image/jpeg,image/png,image/webp" required>
-      <button id="uploadBtn" type="submit">ارسال تصویر فیش</button>
-      <p id="receiptStatus" role="status"></p>
+    <p class="muted">
+      اشتراک موردنظرت را انتخاب کن.
+    </p>
+
+    <div class="plans">
+
+      <label class="plan">
+        <input type="radio" name="plan" value="1-month" checked>
+        <span>
+          <strong>اشتراک یک‌ماهه</strong>
+          <span class="price">۳۰۰٬۰۰۰ تومان</span>
+        </span>
+      </label>
+
+      <label class="plan">
+        <input type="radio" name="plan" value="3-months">
+        <span>
+          <strong>اشتراک سه‌ماهه</strong>
+          <span class="price">۵۰۰٬۰۰۰ تومان</span>
+        </span>
+      </label>
+
+      <label class="plan">
+        <input type="radio" name="plan" value="1-year">
+        <span>
+          <strong>اشتراک یک‌ساله</strong>
+          <span class="price">۱٬۵۰۰٬۰۰۰ تومان</span>
+        </span>
+      </label>
+
+    </div>
+
+    <p class="muted">
+      پس از پرداخت، تصویر فیش را در بخش زیر انتخاب و ارسال کن.
+    </p>
+
+    <form id="receiptForm">
+
+      <label for="receipt">📷 تصویر فیش پرداخت</label>
+
+      <input
+        id="receipt"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+        required
+      >
+
+      <button type="submit" id="receiptButton">
+        ارسال فیش پرداخت
+      </button>
+
+      <p id="receiptStatus" class="status" aria-live="polite"></p>
+
     </form>
+
+    <div class="notice">
+      توجه: ارسال فیش به‌تنهایی پرداخت را تأیید نمی‌کند و اشتراک
+      را فعال نمی‌کند. برای فعال‌سازی واقعی، پرداخت باید بررسی شود
+      و وضعیت اشتراک در سرور ثبت شود.
+    </div>
   </section>
-</main>
 
-<script>
-const API = "https://begal.onrender.com";
-const LIMIT = 10;
-const KEY = "begal_questions_used_v1";
-let used = readUsed();
-let busy = false;
-let messages = [];
+  <!-- سؤال‌های رایگان -->
+  <section class="card">
+    <h2>🎁 سؤال‌های رایگان</h2>
 
-const $ = id => document.getElementById(id);
+    <div id="remaining"
+         style="font-size:19px;color:var(--light);font-weight:bold">
+      ۱۰ سؤال رایگان باقی‌مانده
+    </div>
 
-function readUsed(){
-  try{
-    const n = Number(localStorage.getItem(KEY) || 0);
-    return Number.isFinite(n) ? Math.max(0,Math.min(LIMIT,Math.floor(n))) : 0;
-  }catch{return 0}
-}
-function saveUsed(){
-  try{localStorage.setItem(KEY,String(used))}catch{}
-}
-function updateUI(){
-  $("remaining").textContent = String(LIMIT-used);
-  $("question").disabled = busy || used >= LIMIT;
-  $("sendBtn").disabled = busy || used >= LIMIT;
-  if(used >= LIMIT){
-    $("notice").textContent = "۱۰ سؤال رایگان تمام شده است. برای ادامه، اشتراک تهیه کن.";
-  }
-}
-function addMessage(text,type){
-  const el = document.createElement("div");
-  el.className = "msg " + type;
-  el.textContent = text;
-  $("chat").appendChild(el);
-  $("chat").scrollTop = $("chat").scrollHeight;
-}
+    <p class="muted">
+      پس از هر پاسخ موفق، یک سؤال از سهمیه کم می‌شود.
+    </p>
+  </section>
 
-$("chatForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const q = $("question").value.trim();
-  if(!q || busy || used>=LIMIT)return;
-
-  busy = true;
-  $("notice").textContent = "در حال دریافت پاسخ...";
-  addMessage(q,"user");
-  $("question").value = "";
-  updateUI();
-
-  try{
-    const res = await fetch(API+"/chat",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({messages:[...messages,{role:"user",content:q}]})
-    });
-    if(!res.ok)throw new Error("خطای سرور: "+res.status);
-
-    const data = await res.json();
-    const answer = data.choices?.[0]?.message?.content || data.answer || data.reply || data.response;
-    if(typeof answer!=="string" || !answer.trim())throw new Error("پاسخ معتبر دریافت نشد.");
-
-    used = Math.min(LIMIT,used+1);
-    saveUsed();
-    messages.push({role:"user",content:q},{role:"assistant",content:answer});
-    messages = messages.slice(-20);
-    addMessage(answer,"bot");
-    $("notice").textContent = "پاسخ دریافت شد.";
-  }catch(err){
-    addMessage("پاسخی دریافت نشد. دوباره تلاش کن.","bot");
-    $("notice").textContent = "خطا در اتصال: "+err.message;
-  }finally{
-    busy = false;
-    updateUI();
-  }
-});
-قیمت اشتراک یک‌ماهه: ۳۰۰٬۰۰۰ تومان
-  قیمت اشتراک سه‌ماهه: ۵۰۰٬۰۰۰ تومان
-  قیمت اشتراک یک‌ساله: ۱٬۵۰۰٬۰۰۰ تومان
-$("copyCard").addEventListener("click",async()=>{
-  const number ;"6037991235238288";
-  try{
-    await navigator.clipboard.writeText(number);
-    $("copyCard").textContent = "شماره کارت کپی شد ✓";
-  }catch{
-    window.prompt("شماره کارت را کپی کن:",number);
-  }
-});
-
-$("paymentForm").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const plan = document.querySelector('input[name="plan"]:checked');
-  const file = $("receipt").files[0];
-
-  if(!plan || !file){
-    $("receiptStatus").textContent = "طرح اشتراک و تصویر فیش را انتخاب کن.";
-    return;
-  }
-  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
-    $("receiptStatus").textContent = "فقط تصویر JPG، PNG یا WEBP مجاز است.";
-    return;
-  }
-  if(file.size>5*1024*1024){
-    $("receiptStatus").textContent = "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
-    return;
-  }
-
-  $("uploadBtn").disabled = true;
-  $("receiptStatus").textContent = "در حال ارسال تصویر به سرور...";
-
-  try{
-    const form = new FormData();
-    form.append("receipt",file);
-    form.append("plan",plan.value);
-
-    const res = await fetch(API+"/upload-receipt",{method:"POST",body:form});
-    const data = await res.json();
-    if(!res.ok)throw new Error(data.error || "ارسال تصویر ناموفق بود.");
-
-    $("receiptStatus").textContent =
-      "تصویر به سرور رسید. پرداخت هنوز تأیید نشده و اشتراک فعال نشده است.";
-  }catch(err){
-    $("receiptStatus").textContent = "خطا در ارسال تصویر: "+err.message;
-  }finally{
-    $("uploadBtn").disabled = false;
-  }
-});
-
-updateUI();
-</script>
-</body>
-</html>
+  <!-- گفت‌وگو -->
+  <section class="card">
+    <h2>💬 گفت‌وگو با بگال</
