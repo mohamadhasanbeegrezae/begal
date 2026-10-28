@@ -3,279 +3,64 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d1b">
 <title>بگال | دستیار هوشمند</title>
 
 <style>
 *{box-sizing:border-box}
 body{
-  margin:0;
-  background:#080d18;
-  color:#f4f7ff;
-  font-family:Tahoma,Arial,sans-serif
+ margin:0;background:#080d1b;color:#f5f7ff;
+ font-family:Tahoma,Arial,sans-serif;line-height:1.9
 }
+.container{max-width:760px;margin:auto;padding:16px}
 header{
-  background:#101a2d;
-  padding:20px;
-  text-align:center;
-  border-bottom:1px solid #263854
+ display:flex;align-items:center;justify-content:space-between;
+ padding:12px 0;border-bottom:1px solid #243452
 }
-header h1{margin:0;color:#54a2ff;font-size:28px}
-header p{color:#b5c4da;font-size:13px}
-main{max-width:700px;margin:auto;padding:16px}
-.panel{
-  background:#101a2b;
-  border:1px solid #253750;
-  border-radius:16px;
-  padding:16px;
-  margin-bottom:16px
+.logo{font-size:25px;font-weight:bold;color:#66aaff}
+.badge{background:#172746;border-radius:20px;padding:5px 12px;font-size:12px}
+.hero{text-align:center;padding:24px 0}
+.hero h1{font-size:30px;margin:8px 0;color:#72adff}
+.hero p,.muted{color:#a8b7d3;font-size:13px}
+.card{
+ background:#101a30;border:1px solid #293d60;
+ border-radius:18px;padding:18px;margin:15px 0
 }
-h2{font-size:18px}
-input,textarea{
-  display:block;
-  width:100%;
-  background:#080f1d;
-  color:white;
-  border:1px solid #344761;
-  border-radius:10px;
-  padding:13px;
-  font-family:inherit;
-  font-size:15px;
-  margin:9px 0
-}
+h2{font-size:18px;margin:0 0 8px}
+button,input,textarea{font-family:inherit}
 button{
-  border:0;
-  border-radius:10px;
-  padding:13px;
-  font-family:inherit;
-  font-size:14px;
-  cursor:pointer
+ border:0;border-radius:11px;padding:12px;
+ background:#397bff;color:white;font-size:14px;
+ cursor:pointer
 }
-.primary{background:#2678ed;color:white}
-.secondary{background:#23344f;color:white}
-.row{display:flex;gap:8px;margin-top:12px}
-.row button{flex:1}
-.price{
-  padding:12px;
-  border:1px solid #344761;
-  border-radius:10px;
-  margin:8px 0
+button:disabled{opacity:.45;cursor:not-allowed}
+input,textarea{
+ width:100%;background:#0b1427;color:white;
+ border:1px solid #334768;border-radius:11px;
+ padding:12px;font-size:15px
 }
-.muted,small{color:#aebbd0;line-height:1.9}
-#messages{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  min-height:100px;
-  max-height:400px;
-  overflow:auto;
-  margin:12px 0
+textarea{resize:vertical;min-height:55px}
+.row{display:flex;gap:8px;align-items:center}
+.row button{white-space:nowrap}
+#chat{height:300px;overflow-y:auto;margin:12px 0}
+.msg{padding:11px 13px;border-radius:13px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.user{background:#1a3155;margin-right:25px}
+.bot{background:#182033;margin-left:25px}
+.plan{
+ display:flex;justify-content:space-between;align-items:center;
+ gap:10px;background:#0b1427;border:1px solid #2c4166;
+ padding:12px;border-radius:12px;margin:10px 0
 }
-.msg{
-  padding:12px;
-  border-radius:12px;
-  white-space:pre-wrap;
-  overflow-wrap:anywhere;
-  line-height:1.9
+.price{color:#8fbdff;font-weight:bold;white-space:nowrap}
+.bank{
+ text-align:center;background:#142644;border:1px solid #375b91;
+ border-radius:15px;padding:16px;margin:14px 0
 }
-.user{background:#17345a;align-self:flex-start}
-.bot{background:#1a2638;align-self:stretch}
-#preview{max-width:100%;max-height:220px;display:none;margin:10px 0}
-#status{color:#83c5ff;line-height:1.9}
+.number{direction:ltr;font-size:21px;font-weight:bold;letter-spacing:1px}
+.full{width:100%;margin-top:10px}
+.notice{font-size:12px;color:#f1d69b;background:#302819;padding:12px;border-radius:10px;margin-top:12px}
+.hidden{display:none}
+.status{font-size:13px;color:#9cebd0;margin-top:10px}
+footer{text-align:center;color:#7f91b3;font-size:12px;padding:20px}
 </style>
-</head>
-
-<body>
-<header>
-  <h1>بگال</h1>
-  <p>دستیار هوشمند فارسی شما</p>
-</header>
-
-<main>
-
-<section class="panel">
-  <h2>اشتراک بگال</h2>
-  <p class="muted">طرح‌های اشتراک:</p>
-
-  <div class="price">یک‌ماهه: ۳۰۰٬۰۰۰ تومان</div>
-  <div class="price">سه‌ماهه: ۵۰۰٬۰۰۰ تومان</div>
-  <div class="price">یک‌ساله: ۱٬۵۰۰٬۰۰۰ تومان</div>
-
-  <p class="muted">
-    خرید آنلاین هنوز فعال نشده است.
-    قبل از پرداخت، باید روش پرداخت و تأیید اشتراک تنظیم شود.
-  </p>
-</section>
-
-<section class="panel">
-  <h2>گفت‌وگو با بگال</h2>
-
-  <div id="messages" aria-live="polite">
-    <div class="msg bot">
-      سلام! من بگال هستم.
-      سؤالت را بنویس تا کمکت کنم.
-    </div>
-  </div>
-
-  <label for="image">انتخاب تصویر</label>
-  <input id="image" type="file" accept="image/*">
-
-  <img id="preview" alt="پیش‌نمایش تصویر">
-
-  <small>
-    انتخاب تصویر فعال است؛ اما ارسال و تحلیل واقعی آن
-    به پشتیبانی تصویری سرور و تأیید اشتراک نیاز دارد.
-  </small>
-
-  <label for="question">پیام شما</label>
-  <textarea id="question" rows="3"
-    placeholder="مثلاً علم چیست؟"></textarea>
-
-  <div class="row">
-    <button class="primary" id="send">ارسال پیام</button>
-    <button class="secondary" id="clear">گفت‌وگوی جدید</button>
-  </div>
-
-  <p id="status" role="status"></p>
-</section>
-
-</main>
-
-<script>
-const API = "https://begal.onrender.com";
-
-const messages = document.getElementById("messages");
-const question = document.getElementById("question");
-const imageInput = document.getElementById("image");
-const preview = document.getElementById("preview");
-const statusText = document.getElementById("status");
-const sendButton = document.getElementById("send");
-
-let conversation = [];
-
-function addMessage(text, who) {
-  const div = document.createElement("div");
-  div.className = "msg " + who;
-  div.textContent = text;
-  messages.appendChild(div);
-  messages.scrollTop = messages.scrollHeight;
-}
-
-imageInput.addEventListener("change", function () {
-  const file = imageInput.files[0];
-
-  preview.style.display = "none";
-
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    statusText.textContent = "لطفاً یک تصویر معتبر انتخاب کن.";
-    imageInput.value = "";
-    return;
-  }
-
-  if (file.size > 5 * 1024 * 1024) {
-    statusText.textContent =
-      "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
-    imageInput.value = "";
-    return;
-  }
-
-  preview.src = URL.createObjectURL(file);
-  preview.style.display = "block";
-
-  statusText.textContent =
-    "تصویر انتخاب شد؛ ارسال واقعی آن هنوز نیاز به تنظیم سرور دارد.";
-});
-
-document.getElementById("clear").addEventListener("click", function () {
-  conversation = [];
-  messages.replaceChildren();
-
-  addMessage("سلام! گفت‌وگوی جدید شروع شد.", "bot");
-
-  question.value = "";
-  imageInput.value = "";
-  preview.style.display = "none";
-  statusText.textContent = "";
-});
-
-sendButton.addEventListener("click", async function () {
-  const text = question.value.trim();
-  const file = imageInput.files[0];
-
-  if (!text && !file) {
-    statusText.textContent =
-      "ابتدا سؤال بنویس یا تصویری انتخاب کن.";
-    return;
-  }
-
-  if (file) {
-    statusText.textContent =
-      "ارسال تصویر هنوز در سرور فعال نشده است. ابتدا باید پشتیبانی تصویری و تأیید اشتراک در سرور پیاده‌سازی شود.";
-    return;
-  }
-
-  addMessage(text, "user");
-  question.value = "";
-
-  conversation.push({
-    role: "user",
-    content: text
-  });
-
-  statusText.textContent = "در حال دریافت پاسخ از بگال...";
-  sendButton.disabled = true;
-
-  try {
-    const response = await fetch(API + "/chat", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        messages: conversation
-      })
-    });
-
-    const data = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new Error(
-        data.error || "سرور درخواست را نپذیرفت."
-      );
-    }
-
-    const answer =
-      data.choices?.[0]?.message?.content ||
-      data.reply ||
-      data.message;
-
-    if (typeof answer !== "string") {
-      throw new Error("پاسخ سرور قابل شناسایی نیست.");
-    }
-
-    addMessage(answer, "bot");
-
-    conversation.push({
-      role: "assistant",
-      content: answer
-    });
-
-    statusText.textContent = "";
-
-  } catch (error) {
-    addMessage(
-      "نتوانستم پاسخ بگیرم. اتصال سرور یا تنظیمات هوش مصنوعی را بررسی کن.",
-      "bot"
-    );
-
-    statusText.textContent = error.message;
-
-  } finally {
-    sendButton.disabled = false;
-  }
-});
-</script>
-
-</body>
-</html>
+</head
