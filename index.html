@@ -1,92 +1,22 @@
-<script>
-const API_URL = "https://begal.onrender.com/chat";
-
-const chat = document.getElementById("chat");
-const form = document.getElementById("form");
-const input = document.getElementById("input");
-const send = document.getElementById("send");
-const counter = document.getElementById("counter");
-
-const savedRemaining = localStorage.getItem("begal_remaining");
-let remaining = savedRemaining === null ? 10 : Number(savedRemaining);
-
-if (!Number.isInteger(remaining) || remaining < 0 || remaining > 10) {
-  remaining = 10;
-  localStorage.setItem("begal_remaining", "10");
-}
-
-const history = [];
-
-function updateCounter() {
-  counter.textContent = remaining + " سؤال رایگان باقی مانده";
-}
-
-function addMessage(text, who) {
-  const div = document.createElement("div");
-  div.className = "message " + who;
-  div.textContent = text;
-  chat.appendChild(div);
-  div.scrollIntoView({ behavior: "smooth", block: "end" });
-  return div;
-}
-
-updateCounter();
-
-form.addEventListener("submit", async function(event) {
-  event.preventDefault();
-
-  const question = input.value.trim();
-  if (!question || send.disabled) return;
-
-  if (remaining <= 0) {
-    addMessage("سؤال‌های رایگان تمام شده‌اند. برای ادامه اشتراک لازم است.", "bot");
-    return;
-  }
-
-  addMessage(question, "user");
-  input.value = "";
-  send.disabled = true;
-  send.textContent = "در حال ارسال...";
-
-  history.push({ role: "user", content: question });
-  const loading = addMessage("در حال دریافت پاسخ...", "bot");
-
-  try {
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: history })
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(
-        typeof data.error === "string"
-          ? data.error
-          : data.error?.message || "خطای سرور: " + response.status
-      );
-    }
-
-    const answer = data.choices?.[0]?.message?.content;
-
-    if (!answer) {
-      throw new Error("پاسخ معتبری از هوش مصنوعی دریافت نشد.");
-    }
-
-    loading.textContent = answer;
-    history.push({ role: "assistant", content: answer });
-
-    remaining--;
-    localStorage.setItem("begal_remaining", String(remaining));
-    updateCounter();
-
-  } catch (error) {
-    loading.textContent = "پاسخی دریافت نشد: " + error.message;
-    history.pop();
-  } finally {
-    send.disabled = false;
-    send.textContent = "ارسال";
-  }
-});
-</script>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>بگال | دستیار هوشمند</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d18;color:#f4f7ff;font-family:Tahoma,Arial,sans-serif}
+header{background:#101a2d;padding:18px;text-align:center;border-bottom:1px solid #263854}
+header h1{margin:0;color:#54a2ff;font-size:27px}
+header p{margin:8px 0 0;color:#aebbd0;font-size:13px}
+main{max-width:700px;margin:auto;padding:16px}
+.panel{background:#101a2b;border:1px solid #253750;border-radius:16px;padding:16px;margin-bottom:15px}
+h2{font-size:18px;margin-top:0}
+button{border:0;border-radius:10px;padding:12px 15px;font-family:inherit;font-size:14px;cursor:pointer}
+.primary{background:#2678ed;color:white}
+.secondary{background:#23344f;color:white}
+input,textarea{width:100%;background:#080f1d;color:white;border:1px solid #344761;border-radius:10px;padding:12px;font-family:inherit;font-size:15px;margin:7px 0}
+#messages{display:flex;flex-direction:column;gap:10px;min-height:100px;max-height:42vh;overflow:auto}
+.msg{padding:12px;border-radius:12px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.9}
+.user{background:#17345a;align-self:flex-start;max-width:
