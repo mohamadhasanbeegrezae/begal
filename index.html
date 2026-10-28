@@ -4,65 +4,32 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>بگال | دستیار هوشمند</title>
-
 <style>
 *{box-sizing:border-box}
-body{
-  margin:0;background:#080d18;color:#f1f5f9;
-  font-family:Tahoma,Arial,sans-serif
-}
-header{
-  background:#101a2c;padding:22px 15px;text-align:center;
-  border-bottom:1px solid #293b56
-}
+body{margin:0;background:#080d18;color:#f1f5f9;font-family:Tahoma,Arial,sans-serif}
+header{background:#101a2c;padding:20px;text-align:center;border-bottom:1px solid #293b56}
 header h1{color:#60a5fa;margin:0;font-size:30px}
-header p{color:#cbd5e1;margin-bottom:0}
 main{max-width:700px;margin:auto;padding:15px}
-.card{
-  background:#111c2e;border:1px solid #293b56;
-  border-radius:16px;padding:18px;margin-bottom:16px
-}
+.card{background:#111c2e;border:1px solid #293b56;border-radius:16px;padding:18px;margin-bottom:16px}
+.card-number{direction:ltr;text-align:center;font-size:22px;font-weight:bold;color:#93c5fd}
 .count{font-size:18px;color:#93c5fd;font-weight:bold}
-.card-number{
-  direction:ltr;text-align:center;font-size:22px;
-  font-weight:bold;color:#93c5fd;overflow-wrap:anywhere
-}
-button{
-  border:0;border-radius:10px;padding:13px 16px;
-  background:#2563eb;color:white;font:inherit;
-  font-weight:bold;cursor:pointer
-}
-button:disabled{opacity:.5;cursor:not-allowed}
-input,textarea{
-  font:inherit;color:white;background:#081222;
-  border:1px solid #3b506e;border-radius:10px;padding:12px
-}
-textarea{width:100%;min-height:85px;resize:vertical}
+button{border:0;border-radius:10px;padding:13px 16px;background:#2563eb;color:white;font:inherit;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.5}
+textarea,input{font:inherit;color:white;background:#081222;border:1px solid #3b506e;border-radius:10px;padding:12px}
+textarea{width:100%;min-height:80px;resize:vertical}
 input[type=file]{width:100%;margin:12px 0}
-#chat{
-  display:flex;flex-direction:column;gap:10px;
-  max-height:420px;overflow:auto;margin:15px 0
-}
-.msg{
-  padding:12px;border-radius:12px;line-height:1.9;
-  white-space:pre-wrap;overflow-wrap:anywhere
-}
+#chat{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;margin:15px 0}
+.msg{padding:12px;border-radius:12px;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
 .bot{background:#1b293d}
 .user{background:#173b65;align-self:flex-start;max-width:90%}
 form{display:grid;gap:10px}
-.price{
-  background:#0c1627;border:1px solid #354966;
-  border-radius:12px;padding:14px;margin:10px 0
-}
+.price{background:#0c1627;border:1px solid #354966;border-radius:12px;padding:14px;margin:10px 0}
 .price strong{color:#93c5fd}
-.price label{display:flex;align-items:center;gap:10px;cursor:pointer}
 .small{font-size:13px;color:#a8b5c9;line-height:1.9}
 #notice,#receiptStatus{color:#fbbf24;line-height:1.9}
-.hidden{display:none}
 hr{border:0;border-top:1px solid #293b56;margin:18px 0}
 </style>
 </head>
-
 <body>
 <header>
   <h1>بگال</h1>
@@ -70,24 +37,16 @@ hr{border:0;border-top:1px solid #293b56;margin:18px 0}
 </header>
 
 <main>
-
   <section class="card">
-    <h3>💳 شماره کارت پرداخت اشتراک</h3>
+    <h3>💳 شماره کارت پرداخت</h3>
     <div class="card-number">6104 3376 1120 9998</div>
     <p style="text-align:center">به نام: محمد حسن بیگرضایی</p>
-    <button id="copyCard" type="button" style="width:100%">
-      کپی شماره کارت
-    </button>
+    <button id="copyCard" type="button" style="width:100%">کپی شماره کارت</button>
   </section>
 
   <section class="card">
-    <div class="count">
-      سؤال رایگان باقی‌مانده:
-      <span id="remaining">۱۰</span> از ۱۰
-    </div>
-    <p class="small">
-      پس از دریافت موفق پاسخ، یک سؤال از سهمیه کم می‌شود.
-    </p>
+    <div class="count">سؤال رایگان باقی‌مانده: <span id="remaining">۱۰</span> از ۱۰</div>
+    <p class="small">پس از دریافت موفق هر پاسخ، یک سؤال کم می‌شود.</p>
   </section>
 
   <section class="card">
@@ -95,7 +54,6 @@ hr{border:0;border-top:1px solid #293b56;margin:18px 0}
     <div id="chat" aria-live="polite">
       <div class="msg bot">سلام! من بگال هستم. سؤالت را بنویس.</div>
     </div>
-
     <form id="chatForm">
       <textarea id="question" placeholder="سؤالت را بنویس..." required></textarea>
       <button id="sendBtn" type="submit">ارسال سؤال</button>
@@ -103,236 +61,155 @@ hr{border:0;border-top:1px solid #293b56;margin:18px 0}
     <p id="notice" role="status"></p>
   </section>
 
-  <section class="card hidden" id="subscription">
-    <h2>سهمیه رایگان تمام شد</h2>
-    <p>برای ادامه استفاده، یکی از اشتراک‌های زیر را انتخاب کن.</p>
-
+  <section class="card">
+    <h2>⭐ اشتراک‌های بگال</h2>
+    <p>هر سه طرح اشتراک همیشه در این بخش نمایش داده می‌شوند.</p>
     <form id="paymentForm">
       <div class="price">
-        <label>
-          <input type="radio" name="plan" value="month" required>
-          <span>یک‌ماهه — <strong>۳۰۰٬۰۰۰ تومان</strong></span>
-        </label>
+        <label><input type="radio" name="plan" value="month" required>
+        اشتراک یک‌ماهه — <strong>۳۰۰٬۰۰۰ تومان</strong></label>
       </div>
-
       <div class="price">
-        <label>
-          <input type="radio" name="plan" value="three_months">
-          <span>سه‌ماهه — <strong>۵۰۰٬۰۰۰ تومان</strong></span>
-        </label>
+        <label><input type="radio" name="plan" value="three_months">
+        اشتراک سه‌ماهه — <strong>۵۰۰٬۰۰۰ تومان</strong></label>
       </div>
-
       <div class="price">
-        <label>
-          <input type="radio" name="plan" value="year">
-          <span>یک‌ساله — <strong>۱٬۵۰۰٬۰۰۰ تومان</strong></span>
-        </label>
+        <label><input type="radio" name="plan" value="year">
+        اشتراک یک‌ساله — <strong>۱٬۵۰۰٬۰۰۰ تومان</strong></label>
       </div>
 
-      <p class="small">
-        ابتدا مبلغ اشتراک انتخاب‌شده را به شماره کارت بالا واریز کن.
-        سپس تصویر رسید را انتخاب و ارسال کن.
-      </p>
-
-      <label for="receipt">تصویر فیش پرداخت (JPG، PNG یا WEBP):</label>
+      <p class="small">پس از واریز مبلغ طرح انتخابی، تصویر رسید را انتخاب و ارسال کن.</p>
+      <label for="receipt">انتخاب تصویر فیش پرداخت:</label>
       <input id="receipt" type="file" accept="image/jpeg,image/png,image/webp" required>
-
-      <button id="uploadBtn" type="submit" style="width:100%">
-        ارسال تصویر فیش
-      </button>
+      <button id="uploadBtn" type="submit">ارسال تصویر فیش</button>
       <p id="receiptStatus" role="status"></p>
     </form>
   </section>
-
 </main>
 
 <script>
-const API_URL = "https://begal.onrender.com";
+const API = "https://begal.onrender.com";
 const LIMIT = 10;
-const STORAGE_KEY = "begal_questions_used_v1";
-
-const remainingEl = document.getElementById("remaining");
-const chat = document.getElementById("chat");
-const questionEl = document.getElementById("question");
-const sendBtn = document.getElementById("sendBtn");
-const notice = document.getElementById("notice");
-const subscription = document.getElementById("subscription");
-const receiptInput = document.getElementById("receipt");
-const uploadBtn = document.getElementById("uploadBtn");
-const receiptStatus = document.getElementById("receiptStatus");
-
-let used = loadUsed();
+const KEY = "begal_questions_used_v1";
+let used = readUsed();
 let busy = false;
-let uploading = false;
 let messages = [];
 
-function loadUsed(){
-  try {
-    const n = Number(localStorage.getItem(STORAGE_KEY) || 0);
-    return Number.isFinite(n) ? Math.max(0, Math.min(LIMIT, Math.floor(n))) : 0;
-  } catch {
-    return 0;
-  }
-}
+const $ = id => document.getElementById(id);
 
+function readUsed(){
+  try{
+    const n = Number(localStorage.getItem(KEY) || 0);
+    return Number.isFinite(n) ? Math.max(0,Math.min(LIMIT,Math.floor(n))) : 0;
+  }catch{return 0}
+}
 function saveUsed(){
-  try {
-    localStorage.setItem(STORAGE_KEY, String(used));
-  } catch {}
+  try{localStorage.setItem(KEY,String(used))}catch{}
 }
-
 function updateUI(){
-  remainingEl.textContent = String(LIMIT - used);
-  const finished = used >= LIMIT;
-  subscription.classList.toggle("hidden", !finished);
-  questionEl.disabled = busy || finished;
-  sendBtn.disabled = busy || finished;
-
-  if (finished) {
-    notice.textContent = "سهمیه ۱۰ سؤال رایگان تمام شده است. برای ادامه اشتراک تهیه کن.";
+  $("remaining").textContent = String(LIMIT-used);
+  $("question").disabled = busy || used >= LIMIT;
+  $("sendBtn").disabled = busy || used >= LIMIT;
+  if(used >= LIMIT){
+    $("notice").textContent = "۱۰ سؤال رایگان تمام شده است. برای ادامه، اشتراک تهیه کن.";
   }
 }
-
-function addMessage(text, type){
+function addMessage(text,type){
   const el = document.createElement("div");
   el.className = "msg " + type;
   el.textContent = text;
-  chat.appendChild(el);
-  chat.scrollTop = chat.scrollHeight;
+  $("chat").appendChild(el);
+  $("chat").scrollTop = $("chat").scrollHeight;
 }
 
-document.getElementById("chatForm").addEventListener("submit", async function(e){
+$("chatForm").addEventListener("submit",async e=>{
   e.preventDefault();
-
-  const q = questionEl.value.trim();
-  if (!q || busy) return;
-
-  if (used >= LIMIT) {
-    updateUI();
-    return;
-  }
+  const q = $("question").value.trim();
+  if(!q || busy || used>=LIMIT)return;
 
   busy = true;
-  notice.textContent = "در حال دریافت پاسخ...";
-  addMessage(q, "user");
-  questionEl.value = "";
+  $("notice").textContent = "در حال دریافت پاسخ...";
+  addMessage(q,"user");
+  $("question").value = "";
   updateUI();
 
-  const outgoing = [...messages, { role: "user", content: q }];
-
-  try {
-    const response = await fetch(API_URL + "/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ messages: outgoing })
+  try{
+    const res = await fetch(API+"/chat",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:[...messages,{role:"user",content:q}]})
     });
+    if(!res.ok)throw new Error("خطای سرور: "+res.status);
 
-    if (!response.ok) {
-      throw new Error("خطای سرور: " + response.status);
-    }
+    const data = await res.json();
+    const answer = data.choices?.[0]?.message?.content || data.answer || data.reply || data.response;
+    if(typeof answer!=="string" || !answer.trim())throw new Error("پاسخ معتبر دریافت نشد.");
 
-    const data = await response.json();
-    const answer =
-      data.choices?.[0]?.message?.content ||
-      data.answer || data.reply || data.response;
-
-    if (typeof answer !== "string" || !answer.trim()) {
-      throw new Error("پاسخ معتبر دریافت نشد.");
-    }
-
-    // کم کردن سهمیه فقط پس از دریافت پاسخ موفق
-    used = Math.min(LIMIT, used + 1);
+    used = Math.min(LIMIT,used+1);
     saveUsed();
-
-    messages.push(
-      { role: "user", content: q },
-      { role: "assistant", content: answer }
-    );
+    messages.push({role:"user",content:q},{role:"assistant",content:answer});
     messages = messages.slice(-20);
-
-    addMessage(answer, "bot");
-    notice.textContent = "پاسخ دریافت شد.";
-  } catch (err) {
-    addMessage("پاسخی دریافت نشد. دوباره تلاش کن.", "bot");
-    notice.textContent = "خطا در اتصال: " + err.message;
-  } finally {
+    addMessage(answer,"bot");
+    $("notice").textContent = "پاسخ دریافت شد.";
+  }catch(err){
+    addMessage("پاسخی دریافت نشد. دوباره تلاش کن.","bot");
+    $("notice").textContent = "خطا در اتصال: "+err.message;
+  }finally{
     busy = false;
     updateUI();
   }
 });
 
-document.getElementById("copyCard").addEventListener("click", async function(){
+$("copyCard").addEventListener("click",async()=>{
   const number = "6104337611209998";
-
-  try {
+  try{
     await navigator.clipboard.writeText(number);
-    this.textContent = "شماره کارت کپی شد ✓";
-  } catch {
-    window.prompt("شماره کارت را کپی کن:", number);
+    $("copyCard").textContent = "شماره کارت کپی شد ✓";
+  }catch{
+    window.prompt("شماره کارت را کپی کن:",number);
   }
 });
 
-// ارسال واقعی فایل به سرور
-document.getElementById("paymentForm").addEventListener("submit", async function(e){
+$("paymentForm").addEventListener("submit",async e=>{
   e.preventDefault();
+  const plan = document.querySelector('input[name="plan"]:checked');
+  const file = $("receipt").files[0];
 
-  const selectedPlan = document.querySelector('input[name="plan"]:checked');
-  const file = receiptInput.files[0];
-
-  if (!selectedPlan) {
-    receiptStatus.textContent = "ابتدا یک طرح اشتراک انتخاب کن.";
+  if(!plan || !file){
+    $("receiptStatus").textContent = "طرح اشتراک و تصویر فیش را انتخاب کن.";
+    return;
+  }
+  if(!["image/jpeg","image/png","image/webp"].includes(file.type)){
+    $("receiptStatus").textContent = "فقط تصویر JPG، PNG یا WEBP مجاز است.";
+    return;
+  }
+  if(file.size>5*1024*1024){
+    $("receiptStatus").textContent = "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
     return;
   }
 
-  if (!file) {
-    receiptStatus.textContent = "ابتدا تصویر فیش را انتخاب کن.";
-    return;
-  }
+  $("uploadBtn").disabled = true;
+  $("receiptStatus").textContent = "در حال ارسال تصویر به سرور...";
 
-  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+  try{
+    const form = new FormData();
+    form.append("receipt",file);
+    form.append("plan",plan.value);
 
-  if (!allowedTypes.includes(file.type)) {
-    receiptStatus.textContent = "فقط تصویر JPG، PNG یا WEBP مجاز است.";
-    return;
-  }
+    const res = await fetch(API+"/upload-receipt",{method:"POST",body:form});
+    const data = await res.json();
+    if(!res.ok)throw new Error(data.error || "ارسال تصویر ناموفق بود.");
 
-  if (file.size > 5 * 1024 * 1024) {
-    receiptStatus.textContent = "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
-    return;
-  }
-
-  uploading = true;
-  uploadBtn.disabled = true;
-  receiptStatus.textContent = "در حال ارسال تصویر به سرور بگال...";
-
-  try {
-    const formData = new FormData();
-    formData.append("receipt", file);
-    formData.append("plan", selectedPlan.value);
-
-    const response = await fetch(API_URL + "/upload-receipt", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await response.json();
-
-    if (!response.ok) {
-      throw new Error(data.error || "ارسال تصویر ناموفق بود.");
-    }
-
-    receiptStatus.textContent =
-      "تصویر به سرور رسید؛ اما پرداخت هنوز تأیید نشده و اشتراک فعال نشده است.";
-  } catch (err) {
-    receiptStatus.textContent =
-      "ارسال تصویر انجام نشد. اتصال سرور را بررسی کن. " + err.message;
-  } finally {
-    uploading = false;
-    uploadBtn.disabled = false;
+    $("receiptStatus").textContent =
+      "تصویر به سرور رسید. پرداخت هنوز تأیید نشده و اشتراک فعال نشده است.";
+  }catch(err){
+    $("receiptStatus").textContent = "خطا در ارسال تصویر: "+err.message;
+  }finally{
+    $("uploadBtn").disabled = false;
   }
 });
 
 updateUI();
 </script>
 </body>
-  </html>
+</html>
