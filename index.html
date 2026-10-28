@@ -94,4 +94,188 @@ button{
 
 <section class="panel">
   <h2>اشتراک بگال</h2>
-  <p class="muted">طرح
+  <p class="muted">طرح‌های اشتراک:</p>
+
+  <div class="price">یک‌ماهه: ۳۰۰٬۰۰۰ تومان</div>
+  <div class="price">سه‌ماهه: ۵۰۰٬۰۰۰ تومان</div>
+  <div class="price">یک‌ساله: ۱٬۵۰۰٬۰۰۰ تومان</div>
+
+  <p class="muted">
+    خرید آنلاین هنوز فعال نشده است.
+    قبل از پرداخت، باید روش پرداخت و تأیید اشتراک تنظیم شود.
+  </p>
+</section>
+
+<section class="panel">
+  <h2>گفت‌وگو با بگال</h2>
+
+  <div id="messages" aria-live="polite">
+    <div class="msg bot">
+      سلام! من بگال هستم.
+      سؤالت را بنویس تا کمکت کنم.
+    </div>
+  </div>
+
+  <label for="image">انتخاب تصویر</label>
+  <input id="image" type="file" accept="image/*">
+
+  <img id="preview" alt="پیش‌نمایش تصویر">
+
+  <small>
+    انتخاب تصویر فعال است؛ اما ارسال و تحلیل واقعی آن
+    به پشتیبانی تصویری سرور و تأیید اشتراک نیاز دارد.
+  </small>
+
+  <label for="question">پیام شما</label>
+  <textarea id="question" rows="3"
+    placeholder="مثلاً علم چیست؟"></textarea>
+
+  <div class="row">
+    <button class="primary" id="send">ارسال پیام</button>
+    <button class="secondary" id="clear">گفت‌وگوی جدید</button>
+  </div>
+
+  <p id="status" role="status"></p>
+</section>
+
+</main>
+
+<script>
+const API = "https://begal.onrender.com";
+
+const messages = document.getElementById("messages");
+const question = document.getElementById("question");
+const imageInput = document.getElementById("image");
+const preview = document.getElementById("preview");
+const statusText = document.getElementById("status");
+const sendButton = document.getElementById("send");
+
+let conversation = [];
+
+function addMessage(text, who) {
+  const div = document.createElement("div");
+  div.className = "msg " + who;
+  div.textContent = text;
+  messages.appendChild(div);
+  messages.scrollTop = messages.scrollHeight;
+}
+
+imageInput.addEventListener("change", function () {
+  const file = imageInput.files[0];
+
+  preview.style.display = "none";
+
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    statusText.textContent = "لطفاً یک تصویر معتبر انتخاب کن.";
+    imageInput.value = "";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    statusText.textContent =
+      "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
+    imageInput.value = "";
+    return;
+  }
+
+  preview.src = URL.createObjectURL(file);
+  preview.style.display = "block";
+
+  statusText.textContent =
+    "تصویر انتخاب شد؛ ارسال واقعی آن هنوز نیاز به تنظیم سرور دارد.";
+});
+
+document.getElementById("clear").addEventListener("click", function () {
+  conversation = [];
+  messages.replaceChildren();
+
+  addMessage("سلام! گفت‌وگوی جدید شروع شد.", "bot");
+
+  question.value = "";
+  imageInput.value = "";
+  preview.style.display = "none";
+  statusText.textContent = "";
+});
+
+sendButton.addEventListener("click", async function () {
+  const text = question.value.trim();
+  const file = imageInput.files[0];
+
+  if (!text && !file) {
+    statusText.textContent =
+      "ابتدا سؤال بنویس یا تصویری انتخاب کن.";
+    return;
+  }
+
+  if (file) {
+    statusText.textContent =
+      "ارسال تصویر هنوز در سرور فعال نشده است. ابتدا باید پشتیبانی تصویری و تأیید اشتراک در سرور پیاده‌سازی شود.";
+    return;
+  }
+
+  addMessage(text, "user");
+  question.value = "";
+
+  conversation.push({
+    role: "user",
+    content: text
+  });
+
+  statusText.textContent = "در حال دریافت پاسخ از بگال...";
+  sendButton.disabled = true;
+
+  try {
+    const response = await fetch(API + "/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages: conversation
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "سرور درخواست را نپذیرفت."
+      );
+    }
+
+    const answer =
+      data.choices?.[0]?.message?.content ||
+      data.reply ||
+      data.message;
+
+    if (typeof answer !== "string") {
+      throw new Error("پاسخ سرور قابل شناسایی نیست.");
+    }
+
+    addMessage(answer, "bot");
+
+    conversation.push({
+      role: "assistant",
+      content: answer
+    });
+
+    statusText.textContent = "";
+
+  } catch (error) {
+    addMessage(
+      "نتوانستم پاسخ بگیرم. اتصال سرور یا تنظیمات هوش مصنوعی را بررسی کن.",
+      "bot"
+    );
+
+    statusText.textContent = error.message;
+
+  } finally {
+    sendButton.disabled = false;
+  }
+});
+</script>
+
+</body>
+</html>
