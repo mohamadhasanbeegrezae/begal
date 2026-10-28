@@ -16,11 +16,7 @@
   --text: #f4f7ff;
   --muted: #aab5c8;
 }
-
-* {
-  box-sizing: border-box;
-}
-
+* { box-sizing: border-box; }
 body {
   margin: 0;
   background: var(--bg);
@@ -28,68 +24,48 @@ body {
   font-family: Tahoma, Arial, sans-serif;
   line-height: 1.8;
 }
-
 header {
   text-align: center;
   background: #111a2d;
   border-bottom: 1px solid var(--border);
-  padding: 22px 14px;
+  padding: 20px 12px;
 }
-
 header h1 {
   margin: 0;
   color: #70aaff;
-  font-size: 36px;
+  font-size: 34px;
 }
-
-header p {
-  margin: 5px 0 0;
-}
-
+header p { margin: 4px 0 0; }
 main {
   width: 100%;
-  max-width: 700px;
+  max-width: 680px;
   margin: auto;
-  padding: 15px 12px 35px;
+  padding: 14px 11px 32px;
 }
-
 .card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 18px;
-  padding: 16px;
-  margin-bottom: 14px;
+  border-radius: 17px;
+  padding: 15px;
+  margin-bottom: 13px;
   min-width: 0;
 }
-
-h2 {
-  font-size: 19px;
-  margin: 0 0 12px;
-}
-
-.muted {
-  color: var(--muted);
-  font-size: 13px;
-}
-
-.center {
-  text-align: center;
-}
-
+h2 { font-size: 19px; margin: 0 0 12px; }
+.muted { color: var(--muted); font-size: 13px; }
+.center { text-align: center; }
 .card-number {
   direction: ltr;
   text-align: center;
   color: var(--light);
-  font-size: clamp(21px, 5.8vw, 31px);
+  font-size: clamp(20px, 5.5vw, 30px);
   font-weight: bold;
   overflow-wrap: anywhere;
   margin: 12px 0;
 }
-
 button {
   width: 100%;
   min-height: 45px;
-  padding: 10px 13px;
+  padding: 10px 12px;
   background: var(--blue);
   color: white;
   border: 0;
@@ -98,50 +74,31 @@ button {
   font-weight: bold;
   cursor: pointer;
 }
-
-button:disabled {
-  opacity: .6;
-  cursor: not-allowed;
-}
-
-/* بخش اشتراک‌ها؛ همیشه قابل مشاهده */
-.plans {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
-  width: 100%;
-}
-
+button:disabled { opacity: .6; }
+.plans { display: grid; gap: 8px; }
 .plan {
   display: flex;
   align-items: center;
   gap: 9px;
   padding: 8px 11px;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 11px;
   background: #0d1728;
   cursor: pointer;
-  width: 100%;
   min-width: 0;
 }
-
 .plan input {
   width: 18px;
   height: 18px;
   flex-shrink: 0;
   accent-color: var(--blue);
 }
-
-.plan span {
-  min-width: 0;
-}
-
+.plan span { min-width: 0; }
 .plan strong {
   display: block;
   font-size: 14px;
   line-height: 1.7;
 }
-
 .price {
   display: block;
   color: var(--light);
@@ -149,9 +106,8 @@ button:disabled {
   line-height: 1.7;
   overflow-wrap: anywhere;
 }
-
-input[type="file"],
-textarea {
+input[type="file"], textarea {
+  display: block;
   width: 100%;
   padding: 10px;
   margin: 6px 0 12px;
@@ -161,19 +117,13 @@ textarea {
   border-radius: 11px;
   font: inherit;
 }
-
-textarea {
-  min-height: 85px;
-  resize: vertical;
-}
-
+textarea { min-height: 90px; resize: vertical; }
 #messages {
   display: flex;
   flex-direction: column;
   gap: 9px;
   margin-bottom: 12px;
 }
-
 .msg {
   background: #1b2a40;
   border-radius: 13px;
@@ -181,24 +131,10 @@ textarea {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-
-.msg.user {
-  background: #1d3970;
-}
-
-.status {
-  font-size: 13px;
-  overflow-wrap: anywhere;
-}
-
-.ok {
-  color: #9de5b1;
-}
-
-.error {
-  color: #ffb4b4;
-}
-
+.msg.user { background: #1d3970; }
+.status { font-size: 13px; overflow-wrap: anywhere; }
+.ok { color: #9de5b1; }
+.error { color: #ffb4b4; }
 .notice {
   margin-top: 10px;
   padding: 10px;
@@ -208,53 +144,31 @@ textarea {
   color: #ffe7a6;
   font-size: 12px;
 }
-
-@media (min-width: 500px) {
-  main {
-    padding: 20px 16px 40px;
-  }
-
-  .card {
-    padding: 20px;
-  }
-}
 </style>
 </head>
 
 <body>
-
 <header>
   <h1>بگال</h1>
   <p>دستیار هوشمند فارسی شما</p>
 </header>
 
 <main>
-
   <!-- شماره کارت -->
   <section class="card">
     <h2>💳 شماره کارت پرداخت</h2>
-
     <div class="card-number" id="cardNumber">6037991235238288</div>
-
     <p class="center">به نام: محمد حسن بیگرضایی</p>
-
-    <button type="button" id="copyCard">
-      کپی شماره کارت
-    </button>
-
+    <button type="button" id="copyCard">کپی شماره کارت</button>
     <p id="copyStatus" class="status center" aria-live="polite"></p>
   </section>
 
   <!-- اشتراک‌ها -->
   <section class="card" id="subscriptions">
     <h2>⭐ اشتراک‌های بگال</h2>
-
-    <p class="muted">
-      اشتراک موردنظرت را انتخاب کن.
-    </p>
+    <p class="muted">اشتراک موردنظرت را انتخاب کن.</p>
 
     <div class="plans">
-
       <label class="plan">
         <input type="radio" name="plan" value="1-month" checked>
         <span>
@@ -278,53 +192,305 @@ textarea {
           <span class="price">۱٬۵۰۰٬۰۰۰ تومان</span>
         </span>
       </label>
-
     </div>
 
     <p class="muted">
-      پس از پرداخت، تصویر فیش را در بخش زیر انتخاب و ارسال کن.
+      پس از پرداخت، تصویر فیش را انتخاب کن و ارسال کن.
     </p>
 
     <form id="receiptForm">
-
       <label for="receipt">📷 تصویر فیش پرداخت</label>
-
       <input
         id="receipt"
         type="file"
         accept="image/jpeg,image/png,image/webp"
         required
       >
-
-      <button type="submit" id="receiptButton">
-        ارسال فیش پرداخت
-      </button>
-
+      <button type="submit" id="receiptButton">ارسال فیش پرداخت</button>
       <p id="receiptStatus" class="status" aria-live="polite"></p>
-
     </form>
 
     <div class="notice">
-      توجه: ارسال فیش به‌تنهایی پرداخت را تأیید نمی‌کند و اشتراک
-      را فعال نمی‌کند. برای فعال‌سازی واقعی، پرداخت باید بررسی شود
-      و وضعیت اشتراک در سرور ثبت شود.
+      ارسال فیش به‌تنهایی پرداخت را تأیید نمی‌کند و اشتراک را فعال
+      نمی‌کند. برای فعال‌سازی واقعی، پرداخت باید بررسی و اشتراک
+      در سرور ثبت شود.
     </div>
   </section>
 
-  <!-- سؤال‌های رایگان -->
+  <!-- سهمیه رایگان -->
   <section class="card">
     <h2>🎁 سؤال‌های رایگان</h2>
-
     <div id="remaining"
          style="font-size:19px;color:var(--light);font-weight:bold">
       ۱۰ سؤال رایگان باقی‌مانده
     </div>
-
-    <p class="muted">
-      پس از هر پاسخ موفق، یک سؤال از سهمیه کم می‌شود.
-    </p>
+    <p class="muted">پس از هر پاسخ موفق، یک سؤال از سهمیه کم می‌شود.</p>
   </section>
 
   <!-- گفت‌وگو -->
-  <section class="card">
-    <h2>💬 گفت‌وگو با بگال</
+  <section class="card" id="chat">
+    <h2>💬 گفت‌وگو با بگال</h2>
+
+    <div id="messages" aria-live="polite">
+      <div class="msg">سلام! من بگال هستم. سؤالت را بنویس.</div>
+    </div>
+
+    <form id="chatForm">
+      <label for="question">سؤالت را بنویس:</label>
+      <textarea
+        id="question"
+        placeholder="سؤالت را اینجا بنویس..."
+      ></textarea>
+
+      <label for="chatImage">📷 انتخاب تصویر برای سؤال</label>
+      <input
+        id="chatImage"
+        type="file"
+        accept="image/jpeg,image/png,image/webp"
+      >
+
+      <button type="submit" id="send">ارسال سؤال</button>
+      <p id="chatStatus" class="status" aria-live="polite"></p>
+    </form>
+
+    <div class="notice">
+      پاسخ‌گویی به تصویر به پشتیبانی موتور هوش مصنوعی بستگی دارد.
+      اگر API از تصویر پشتیبانی نکند، سرور باید اصلاح شود.
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const API = "https://begal.onrender.com";
+  const LIMIT = 10;
+  const STORAGE_KEY = "begal_questions_used_v1";
+
+  let used = 0;
+  let messages = [];
+
+  try {
+    used = Math.max(
+      0,
+      Math.min(LIMIT, Number(localStorage.getItem(STORAGE_KEY)) || 0)
+    );
+  } catch (_) {}
+
+  const $ = id => document.getElementById(id);
+
+  function showStatus(id, message, type = "") {
+    $(id).textContent = message;
+    $(id).className = "status " + type;
+  }
+
+  function updateRemaining() {
+    $("remaining").textContent =
+      `${Math.max(0, LIMIT - used)} سؤال رایگان باقی‌مانده`;
+  }
+
+  function addMessage(text, who) {
+    const el = document.createElement("div");
+    el.className = "msg" + (who === "user" ? " user" : "");
+    el.textContent = text;
+    $("messages").appendChild(el);
+  }
+
+  function readImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error("خواندن تصویر ناموفق بود."));
+      reader.readAsDataURL(file);
+    });
+  }
+
+  updateRemaining();
+
+  // کپی شماره کارت
+  $("copyCard").addEventListener("click", async () => {
+    const number = $("cardNumber").textContent.trim();
+
+    try {
+      await navigator.clipboard.writeText(number);
+      showStatus("copyStatus", "شماره کارت کپی شد.", "ok");
+    } catch (_) {
+      showStatus(
+        "copyStatus",
+        "کپی خودکار ممکن نیست؛ شماره کارت را انتخاب و کپی کن."
+      );
+    }
+  });
+
+  // ارسال فیش
+  $("receiptForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const file = $("receipt").files[0];
+    const plan = document.querySelector('input[name="plan"]:checked');
+
+    if (!file || !plan) {
+      showStatus("receiptStatus", "اشتراک و تصویر فیش را انتخاب کن.", "error");
+      return;
+    }
+
+    if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+      showStatus("receiptStatus", "فقط تصویر JPG، PNG یا WEBP مجاز است.", "error");
+      return;
+    }
+
+    if (file.size > 8 * 1024 * 1024) {
+      showStatus("receiptStatus", "حجم تصویر باید کمتر از ۸ مگابایت باشد.", "error");
+      return;
+    }
+
+    const form = new FormData();
+    form.append("receipt", file);
+    form.append("plan", plan.value);
+
+    $("receiptButton").disabled = true;
+    showStatus("receiptStatus", "در حال ارسال فیش...");
+
+    try {
+      const response = await fetch(API + "/upload-receipt", {
+        method: "POST",
+        body: form
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "ارسال ناموفق بود.");
+      }
+
+      showStatus(
+        "receiptStatus",
+        "فیش ارسال شد؛ تأیید پرداخت و فعال‌سازی اشتراک باید جداگانه انجام شود.",
+        "ok"
+      );
+    } catch (_) {
+      showStatus(
+        "receiptStatus",
+        "ارسال فیش ناموفق بود. اتصال اینترنت و سرور را بررسی کن.",
+        "error"
+      );
+    } finally {
+      $("receiptButton").disabled = false;
+    }
+  });
+
+  // گفت‌وگو با هوش مصنوعی
+  $("chatForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const question = $("question").value.trim();
+    const imageFile = $("chatImage").files[0];
+
+    if (!question && !imageFile) {
+      showStatus("chatStatus", "سؤال بنویس یا تصویری انتخاب کن.", "error");
+      return;
+    }
+
+    if (used >= LIMIT) {
+      showStatus(
+        "chatStatus",
+        "سهمیه ۱۰ سؤال رایگان تمام شده است. برای ادامه باید اشتراک فعال شود.",
+        "error"
+      );
+      return;
+    }
+
+    if (imageFile && ![
+      "image/jpeg", "image/png", "image/webp"
+    ].includes(imageFile.type)) {
+      showStatus("chatStatus", "تصویر باید JPG، PNG یا WEBP باشد.", "error");
+      return;
+    }
+
+    if (imageFile && imageFile.size > 5 * 1024 * 1024) {
+      showStatus("chatStatus", "حجم تصویر باید کمتر از ۵ مگابایت باشد.", "error");
+      return;
+    }
+
+    $("send").disabled = true;
+    showStatus("chatStatus", "در حال دریافت پاسخ...");
+
+    try {
+      let content = question;
+
+      if (imageFile) {
+        const imageData = await readImage(imageFile);
+        content = [
+          {
+            type: "text",
+            text: question || "لطفاً این تصویر را بررسی کن و به فارسی توضیح بده."
+          },
+          {
+            type: "image_url",
+            image_url: { url: imageData }
+          }
+        ];
+      }
+
+      addMessage(question || "تصویر ارسال شد.", "user");
+
+      const nextMessages = [
+        ...messages,
+        { role: "user", content: content }
+      ];
+
+      const response = await fetch(API + "/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: nextMessages })
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || "خطای سرور");
+      }
+
+      const answer =
+        data.choices?.[0]?.message?.content ||
+        data.reply ||
+        data.answer;
+
+      if (!answer) {
+        throw new Error("پاسخ خالی بود.");
+      }
+
+      messages = [
+        ...nextMessages,
+        { role: "assistant", content: answer }
+      ];
+
+      addMessage(
+        typeof answer === "string" ? answer : JSON.stringify(answer),
+        "assistant"
+      );
+
+      used = Math.min(LIMIT, used + 1);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, String(used));
+      } catch (_) {}
+
+      updateRemaining();
+      $("question").value = "";
+      $("chatImage").value = "";
+      showStatus("chatStatus", "");
+
+    } catch (_) {
+      showStatus(
+        "chatStatus",
+        "پاسخ دریافت نشد. سرور یا API را بررسی کن.",
+        "error"
+      );
+    } finally {
+      $("send").disabled = false;
+    }
+  });
+})();
+</script>
+</body>
+        </html>
