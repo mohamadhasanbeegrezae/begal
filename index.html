@@ -3,64 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#080d1b">
 <title>بگال | دستیار هوشمند</title>
 
 <style>
 *{box-sizing:border-box}
 body{
- margin:0;background:#080d1b;color:#f5f7ff;
- font-family:Tahoma,Arial,sans-serif;line-height:1.9
+  margin:0;background:#080d18;color:#f1f5f9;
+  font-family:Tahoma,Arial,sans-serif;
 }
-.container{max-width:760px;margin:auto;padding:16px}
 header{
- display:flex;align-items:center;justify-content:space-between;
- padding:12px 0;border-bottom:1px solid #243452
+  background:#101a2c;padding:20px;
+  border-bottom:1px solid #263955;
 }
-.logo{font-size:25px;font-weight:bold;color:#66aaff}
-.badge{background:#172746;border-radius:20px;padding:5px 12px;font-size:12px}
-.hero{text-align:center;padding:24px 0}
-.hero h1{font-size:30px;margin:8px 0;color:#72adff}
-.hero p,.muted{color:#a8b7d3;font-size:13px}
+header h1{margin:0;color:#60a5fa;font-size:27px}
+header p{margin:9px 0 0;color:#cbd5e1}
+main{max-width:720px;margin:auto;padding:16px}
 .card{
- background:#101a30;border:1px solid #293d60;
- border-radius:18px;padding:18px;margin:15px 0
+  background:#111c2e;border:1px solid #293b56;
+  border-radius:16px;padding:17px;margin-bottom:16px;
 }
-h2{font-size:18px;margin:0 0 8px}
-button,input,textarea{font-family:inherit}
+.count{font-size:18px;color:#93c5fd;font-weight:bold}
+.muted{color:#a8b5c9;font-size:13px;line-height:1.9}
+#chat{
+  min-height:220px;max-height:420px;overflow-y:auto;
+  display:flex;flex-direction:column;gap:12px;
+}
+.msg{
+  padding:12px 14px;border-radius:12px;
+  white-space:pre-wrap;line-height:1.9;overflow-wrap:anywhere;
+}
+.user{background:#173b65;align-self:flex-start;max-width:90%}
+.bot{background:#1b293d;align-self:stretch}
+form{display:flex;gap:8px;margin-top:14px}
+textarea{
+  flex:1;min-width:0;resize:vertical;min-height:52px;
+  background:#081222;color:white;border:1px solid #3b506e;
+  border-radius:10px;padding:13px;font:inherit;
+}
 button{
- border:0;border-radius:11px;padding:12px;
- background:#397bff;color:white;font-size:14px;
- cursor:pointer
+  border:0;border-radius:10px;padding:12px 15px;
+  background:#2563eb;color:white;font:inherit;
+  font-weight:bold;cursor:pointer;
 }
-button:disabled{opacity:.45;cursor:not-allowed}
-input,textarea{
- width:100%;background:#0b1427;color:white;
- border:1px solid #334768;border-radius:11px;
- padding:12px;font-size:15px
+button:disabled{opacity:.5;cursor:not-allowed}
+.secondary{background:#25364f}
+.price{
+  border:1px solid #354966;border-radius:12px;
+  padding:14px;margin:10px 0;background:#0c1627;
 }
-textarea{resize:vertical;min-height:55px}
-.row{display:flex;gap:8px;align-items:center}
-.row button{white-space:nowrap}
-#chat{height:300px;overflow-y:auto;margin:12px 0}
-.msg{padding:11px 13px;border-radius:13px;margin:9px 0;white-space:pre-wrap;overflow-wrap:anywhere}
-.user{background:#1a3155;margin-right:25px}
-.bot{background:#182033;margin-left:25px}
-.plan{
- display:flex;justify-content:space-between;align-items:center;
- gap:10px;background:#0b1427;border:1px solid #2c4166;
- padding:12px;border-radius:12px;margin:10px 0
-}
-.price{color:#8fbdff;font-weight:bold;white-space:nowrap}
-.bank{
- text-align:center;background:#142644;border:1px solid #375b91;
- border-radius:15px;padding:16px;margin:14px 0
-}
-.number{direction:ltr;font-size:21px;font-weight:bold;letter-spacing:1px}
-.full{width:100%;margin-top:10px}
-.notice{font-size:12px;color:#f1d69b;background:#302819;padding:12px;border-radius:10px;margin-top:12px}
-.hidden{display:none}
-.status{font-size:13px;color:#9cebd0;margin-top:10px}
-footer{text-align:center;color:#7f91b3;font-size:12px;padding:20px}
+.price strong{color:#93c5fd}
+#notice{line-height:1.9;color:#fbbf24}
+input[type=file]{width:100%;margin:12px 0}
+hr{border:0;border-top:1px solid #293b56;margin:16px 0}
 </style>
-</head
+</head>
+
+<body>
+<header>
+  <h1>✦ بگال</h1>
+  <p>دستیار هوشمند فارسی شما</p>
+</header>
+
+<main>
+  <section class="card">
+    <div class="count">
+      سؤال رایگان باقی‌مانده:
+      <span id="remaining">۱۰</span> از ۱۰
+    </div>
+    <p class="muted">
+      تعداد فقط پس از دریافت موفق پاسخ از هوش مصنوعی کم می‌شود.
+    </p>
+  </section>
+
+  <section class="card">
+    <h3>💬 گفت‌وگو با بگال</h3>
+    <div id="chat" aria-live="polite">
+      <div class="msg bot">سلام! من بگال هستم. چه سؤالی داری؟</div>
+    </div>
+
+    <form id="chatForm">
+      <textarea id="question" placeholder="سؤالت را بنویس..." required></textarea>
+      <button id="sendBtn" type="submit">ارسال</button>
+    </form>
+    <p id="notice" role="status"></p>
+  </section>
+
+  <section class="card" id="subscription">
+    <h3>⭐ اشتراک بگال</h3>
+    <p>پس از پایان ۱۰ سؤال رایگان، برای ادامه باید اشتراک فعال داشته باشی.</p>
+
+    <div class="price">
+      اشتراک یک‌ماهه<br>
+      <strong>۳۰۰٬۰۰۰ تومان</strong>
+    </div>
+    <div class="price">
+      اشتراک سه‌ماهه<br>
+      <strong>۵۰۰٬۰۰۰ تومان</strong>
+    </div>
+    <div class="price">
+      اشتراک یک‌ساله<br>
+      <strong>۱٬۵۰۰٬۰۰۰ تومان</strong>
+    </div>
+
+    <hr>
+    <h3>💳 اطلاعات پرداخت</h3>
+    <p>شماره کارت:</p>
+    <p dir="ltr" style="font-size:20px;font-weight:bold">
+      6104 3376 1120 9998
+    </p>
+    <p>به نام: محمد حسن بیگرضایی</p>
+    <button type="button" id="copyCard">کپی شماره کارت</button>
+
+    <hr>
+    <h3>📷 ارسال رسید پرداخت</h3>
+    <p class="muted">
+      پس از واریز، تصویر رسید را انتخاب کن. برای ارسال واقعی رسید
+      و فعال شدن اشتراک، اتصال بخش تأیید پرداخت به سرور لازم است.
+    </p>
+    <label for="receipt">انتخاب تصویر رسید:</label>
+    <input id="receipt" type="file" accept="image/*">
+    <p id="receiptStatus" class="muted"></p>
+  </section>
+</main>
+
+<script>
+const API_URL = "https://begal.onrender.com/chat";
+const FREE_LIMIT = 10;
+const STORAGE_KEY = "begal_free_questions_used_v1";
+
+const remainingEl = document.getElementById("remaining");
+const chat = document.getElementById("chat");
+const questionEl = document.getElementById("question");
+const sendBtn = document.getElementById("sendBtn");
+const notice = document.getElementById("notice");
+
+let used = loadUsed();
+let busy = false;
+let historyMessages = [];
+
+function loadUsed() {
+  try {
+    const value = Number(localStorage.getItem(STORAGE_KEY) || 0);
+    return Number.isFinite(value) ? Math.max(0, Math.min(FREE_LIMIT, Math.floor(value))) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+function saveUsed() {
+  try {
+    localStorage.setItem(STORAGE_KEY, String(used));
+  } catch {}
+}
+
+function updateCount() {
+  remainingEl.textContent = String(FREE_LIMIT - used);
+  sendBtn.disabled = busy || used >= FREE_LIMIT;
+  questionEl.disabled = busy || used >= FREE_LIMIT;
+
+  if (used >= FREE_LIMIT) {
+    notice.textContent = "۱۰ سؤال رایگان تمام شده است. برای ادامه باید اشتراک فعال شود.";
+  }
+}
+
+function addMessage(text, type) {
+  const div = document.createElement("div");
+  div.className = "msg " + type;
+  div.textContent = text;
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+document.getElementById("chatForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const question = questionEl.value.trim();
+  if (!question || busy) return;
+
+  if (used >= FREE_LIMIT) {
+    notice.textContent = "سهمیه رایگان تمام شده است. بخش اشتراک را بررسی کن.";
+    return;
+  }
+
+  busy = true;
+  notice.textContent = "بگال در حال پاسخ دادن است...";
+  addMessage(question, "user");
+  questionEl.value = "";
+  updateCount();
+
+  const messages = [
+    ...historyMessages,
+    { role: "user", content: question }
+  ];
+
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages })
+    });
+
+    if (!response.ok) {
+      throw new Error("خطای سرور: " + response.status);
+    }
+
+    const data = await response.json();
+
+    const answer =
+      data.choices?.[0]?.message?.content ||
+      data.answer ||
+      data.reply ||
+      data.response;
+
+    if (!answer || typeof answer !== "string") {
+      throw new Error("پاسخ معتبر از سرور دریافت نشد.");
+    }
+
+    // شمارنده فقط بعد از دریافت پاسخ موفق کم می‌شود.
+    used = Math.min(FREE_LIMIT, used + 1);
+    saveUsed();
+
+    historyMessages.push(
+      { role: "user", content: question },
+      { role: "assistant", content: answer }
+    );
+
+    // نگه‌داشتن تاریخچه در اندازه محدود
+    historyMessages = historyMessages.slice(-20);
+
+    addMessage(answer, "bot");
+    notice.textContent = "پاسخ دریافت شد.";
+  } catch (error) {
+    addMessage("متأسفانه پاسخ دریافت نشد. دوباره امتحان کن.", "bot");
+    notice.textContent = "خطا در اتصال: " + error.message;
+    // در صورت خطا، سهمیه کم نمی‌شود.
+  } finally {
+    busy = false;
+    updateCount();
+  }
+});
+
+document.getElementById("copyCard").addEventListener("click", async function() {
+  const card = "6037991235238288";
+  try {
+    await navigator.clipboard.writeText(card);
+    this.textContent = "شماره کارت کپی شد ✓";
+  } catch {
+    window.prompt("شماره کارت را کپی کن:", card);
+  }
+});
+
+document.getElementById("receipt").addEventListener("change", function() {
+  const status = document.getElementById("receiptStatus");
+  if (this.files && this.files.length) {
+    status.textContent = "تصویر انتخاب شد؛ هنوز به سرور ارسال یا تأیید نشده است.";
+  } else {
+    status.textContent = "";
+  }
+});
+
+updateCount();
+</script>
+</body>
+ </html>
