@@ -8,272 +8,127 @@
 
 <style>
 :root {
-  --bg: #080d18;
-  --panel: #111c2e;
-  --panel2: #17243a;
-  --border: #263955;
-  --blue: #2864e8;
-  --light: #80b7ff;
-  --text: #f4f7ff;
-  --muted: #9eacc2;
+  --bg:#080d18;
+  --panel:#111c2e;
+  --panel2:#17243a;
+  --border:#263955;
+  --blue:#2864e8;
+  --light:#80b7ff;
+  --text:#f4f7ff;
+  --muted:#9eacc2;
 }
-
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;min-height:100vh;
 }
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--text);
-  font-family: Tahoma, Arial, sans-serif;
-  min-height: 100vh;
+header{
+  height:66px;background:#101a2b;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 15px;position:sticky;top:0;z-index:5;
 }
-
-header {
-  height: 66px;
-  background: #101a2b;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 15px;
-  position: sticky;
-  top: 0;
-  z-index: 5;
+.brand{display:flex;align-items:center;gap:10px}
+.logo{
+  width:39px;height:39px;border-radius:13px;
+  background:linear-gradient(135deg,#347cff,#153b91);
+  display:grid;place-items:center;font-size:21px;font-weight:bold;
 }
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.brand h1{color:var(--light);font-size:22px;margin:0}
+button{font-family:inherit;cursor:pointer}
+.new-chat{
+  width:auto;min-height:38px;padding:7px 12px;
+  background:var(--panel2);border:1px solid var(--border);
+  border-radius:10px;color:white;font:inherit;
 }
-
-.logo {
-  width: 39px;
-  height: 39px;
-  border-radius: 13px;
-  background: linear-gradient(135deg, #347cff, #153b91);
-  display: grid;
-  place-items: center;
-  font-size: 21px;
-  font-weight: bold;
+main{max-width:850px;margin:auto;padding:18px 13px 20px}
+.welcome{text-align:center;padding:35px 12px 22px}
+.welcome h2{color:var(--light);font-size:25px;margin:0 0 8px}
+.welcome p{color:var(--muted);font-size:14px;margin:0}
+.quota{
+  background:#101d32;border:1px solid var(--border);
+  border-radius:13px;padding:11px 14px;margin:5px 0 18px;
+  display:flex;justify-content:space-between;align-items:center;
+  gap:8px;font-size:13px;
 }
-
-.brand h1 {
-  color: var(--light);
-  font-size: 22px;
-  margin: 0;
+#remaining{color:var(--light);font-weight:bold}
+#messages{display:flex;flex-direction:column;gap:15px;padding:8px 0 20px}
+.msg-row{display:flex;gap:9px;align-items:flex-start}
+.msg-row.user{flex-direction:row-reverse}
+.avatar{
+  width:34px;height:34px;flex-shrink:0;border-radius:11px;
+  display:grid;place-items:center;background:#1c3765;color:white;
+  font-size:14px;font-weight:bold;
 }
-
-.new-chat {
-  width: auto;
-  min-height: 38px;
-  padding: 7px 12px;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: white;
-  font: inherit;
-  cursor: pointer;
+.msg-row.assistant .avatar{
+  background:linear-gradient(135deg,#347cff,#153b91);
 }
-
-main {
-  max-width: 850px;
-  margin: auto;
-  padding: 18px 13px 20px;
+.bubble{
+  max-width:85%;padding:12px 15px;border-radius:15px;
+  background:var(--panel2);border:1px solid var(--border);
+  line-height:2;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;
 }
-
-.welcome {
-  text-align: center;
-  padding: 35px 12px 22px;
+.user .bubble{background:#19386d;border-color:#2855a0}
+.bubble img{display:block;max-width:100%;max-height:250px;border-radius:10px;margin-bottom:8px}
+.composer{
+  position:sticky;bottom:0;
+  background:linear-gradient(transparent,var(--bg) 18%);
+  padding:18px 0 10px;
 }
-
-.welcome h2 {
-  color: var(--light);
-  font-size: 25px;
-  margin: 0 0 8px;
+.input-box{
+  display:flex;align-items:flex-end;gap:8px;
+  background:#111d30;border:1px solid #344967;
+  border-radius:17px;padding:10px;box-shadow:0 8px 30px #0005;
 }
-
-.welcome p {
-  color: var(--muted);
-  font-size: 14px;
-  margin: 0;
+textarea{
+  flex:1;min-width:0;min-height:42px;max-height:150px;
+  resize:none;border:0;outline:none;background:transparent;
+  color:white;font:inherit;font-size:14px;line-height:1.9;padding:7px;
 }
-
-.quota {
-  background: #101d32;
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 11px 14px;
-  margin: 5px 0 18px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
+textarea::placeholder{color:#8b9bb3}
+#send{
+  width:43px;height:43px;flex-shrink:0;border:0;
+  border-radius:12px;background:var(--blue);color:white;font-size:20px;
 }
-
-#remaining {
-  color: var(--light);
-  font-weight: bold;
+#send:disabled{opacity:.5}
+.attach{
+  width:43px;height:43px;flex-shrink:0;border-radius:12px;
+  display:grid;place-items:center;background:#1b2d49;
+  border:1px solid #344967;color:var(--light);font-size:21px;
 }
-
-#messages {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  padding: 8px 0 20px;
+#imageInput{display:none}
+#imageInfo{
+  display:none;color:var(--light);font-size:12px;
+  padding:8px 12px 0;align-items:center;gap:8px;
 }
-
-.msg-row {
-  display: flex;
-  gap: 9px;
-  align-items: flex-start;
+#removeImage{
+  width:25px;height:25px;border:0;border-radius:8px;
+  background:#59303b;color:white;
 }
-
-.msg-row.user {
-  flex-direction: row-reverse;
+.status{
+  min-height:23px;text-align:center;color:var(--muted);
+  font-size:12px;padding-top:5px;
 }
-
-.avatar {
-  width: 34px;
-  height: 34px;
-  flex-shrink: 0;
-  border-radius: 11px;
-  display: grid;
-  place-items: center;
-  background: #1c3765;
-  color: white;
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.msg-row.assistant .avatar {
-  background: linear-gradient(135deg, #347cff, #153b91);
-}
-
-.bubble {
-  max-width: 85%;
-  padding: 12px 15px;
-  border-radius: 15px;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  line-height: 2;
-  font-size: 14px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
-}
-
-.user .bubble {
-  background: #19386d;
-  border-color: #2855a0;
-}
-
-.composer {
-  position: sticky;
-  bottom: 0;
-  background: linear-gradient(transparent, var(--bg) 18%);
-  padding: 18px 0 10px;
-}
-
-.input-box {
-  display: flex;
-  align-items: flex-end;
-  gap: 9px;
-  background: #111d30;
-  border: 1px solid #344967;
-  border-radius: 17px;
-  padding: 10px;
-  box-shadow: 0 8px 30px #0005;
-}
-
-textarea {
-  flex: 1;
-  min-width: 0;
-  min-height: 42px;
-  max-height: 150px;
-  resize: none;
-  border: 0;
-  outline: none;
-  background: transparent;
-  color: white;
-  font: inherit;
-  font-size: 14px;
-  line-height: 1.9;
-  padding: 7px;
-}
-
-textarea::placeholder {
-  color: #8b9bb3;
-}
-
-#send {
-  width: 43px;
-  height: 43px;
-  flex-shrink: 0;
-  border: 0;
-  border-radius: 12px;
-  background: var(--blue);
-  color: white;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#send:disabled {
-  opacity: .5;
-}
-
-.status {
-  min-height: 23px;
-  text-align: center;
-  color: var(--muted);
-  font-size: 12px;
-  padding-top: 5px;
-}
-
-footer {
-  text-align: center;
-  color: #71819a;
-  font-size: 11px;
-  padding: 5px 0 15px;
-}
-
-@media (max-width: 480px) {
-  main {
-    padding: 10px 10px 15px;
-  }
-
-  .welcome {
-    padding-top: 27px;
-  }
-
-  .welcome h2 {
-    font-size: 22px;
-  }
-
-  .bubble {
-    max-width: 88%;
-    font-size: 13px;
-  }
+footer{text-align:center;color:#71819a;font-size:11px;padding:5px 0 15px}
+@media(max-width:480px){
+  main{padding:10px 10px 15px}
+  .welcome{padding-top:27px}
+  .welcome h2{font-size:22px}
+  .bubble{max-width:88%;font-size:13px}
 }
 </style>
 </head>
 
 <body>
-
 <header>
   <div class="brand">
     <div class="logo">ب</div>
     <h1>بگال</h1>
   </div>
-
   <button class="new-chat" id="newChat">＋ گفت‌وگوی جدید</button>
 </header>
 
 <main>
-
-  <section class="welcome" id="welcome">
+  <section class="welcome">
     <h2>سلام! من بگال هستم 👋</h2>
     <p>دستیار هوشمند فارسی؛ سؤالت را بپرس تا کمکت کنم.</p>
   </section>
@@ -286,34 +141,39 @@ footer {
   <section id="messages" aria-live="polite">
     <div class="msg-row assistant">
       <div class="avatar">ب</div>
-      <div class="bubble">
-        سلام! خوش آمدی 🌟
-
-        من بگال هستم. می‌توانی درباره درس، علم، فناوری و موضوعات مختلف از من سؤال بپرسی.
-      </div>
+      <div class="bubble">سلام! خوش آمدی 🌟
+من بگال هستم. می‌توانی سؤال متنی یا تصویری بپرسی.</div>
     </div>
   </section>
 
   <section class="composer">
     <form id="chatForm">
       <div class="input-box">
+        <label class="attach" for="imageInput" title="انتخاب تصویر">📎</label>
+        <input
+          id="imageInput"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+        >
         <textarea
           id="question"
           rows="1"
           placeholder="پیامت را برای بگال بنویس..."
           autocomplete="off"
         ></textarea>
-
         <button type="submit" id="send" aria-label="ارسال">➤</button>
       </div>
+
+      <div id="imageInfo">
+        <span id="imageName"></span>
+        <button type="button" id="removeImage">×</button>
+      </div>
+
       <div id="chatStatus" class="status"></div>
     </form>
   </section>
 
-  <footer>
-    بگال | دستیار هوشمند فارسی شما
-  </footer>
-
+  <footer>بگال | دستیار هوشمند فارسی شما</footer>
 </main>
 
 <script>
@@ -321,156 +181,217 @@ footer {
   const API = "https://begal.onrender.com";
   const LIMIT = 10;
   const STORAGE_KEY = "begal_questions_used_v1";
-
   const $ = id => document.getElementById(id);
 
   let used = 0;
   let messages = [];
+  let selectedImage = null;
 
   try {
-    used = Math.max(
-      0,
-      Math.min(LIMIT, Number(localStorage.getItem(STORAGE_KEY)) || 0)
-    );
-  } catch (e) {}
+    used = Math.max(0,Math.min(
+      LIMIT,Number(localStorage.getItem(STORAGE_KEY)) || 0
+    ));
+  } catch(e) {}
 
-  function updateQuota() {
+  function updateQuota(){
     $("remaining").textContent =
-      Math.max(0, LIMIT - used) + " سؤال باقی‌مانده";
+      Math.max(0,LIMIT-used) + " سؤال باقی‌مانده";
   }
 
-  function status(message) {
+  function status(message){
     $("chatStatus").textContent = message;
   }
 
-  function addMessage(text, role) {
-    const row = document.createElement("div");
-    row.className = "msg-row " + role;
+  function addMessage(text,role,imageUrl=null){
+    const row=document.createElement("div");
+    row.className="msg-row "+role;
 
-    const avatar = document.createElement("div");
-    avatar.className = "avatar";
-    avatar.textContent = role === "user" ? "ش" : "ب";
+    const avatar=document.createElement("div");
+    avatar.className="avatar";
+    avatar.textContent=role==="user"?"ش":"ب";
 
-    const bubble = document.createElement("div");
-    bubble.className = "bubble";
-    bubble.textContent = text;
+    const bubble=document.createElement("div");
+    bubble.className="bubble";
+
+    if(imageUrl){
+      const img=document.createElement("img");
+      img.src=imageUrl;
+      img.alt="تصویر ارسال‌شده";
+      bubble.appendChild(img);
+    }
+
+    if(text){
+      const content=document.createElement("div");
+      content.textContent=text;
+      bubble.appendChild(content);
+    }
 
     row.appendChild(avatar);
     row.appendChild(bubble);
     $("messages").appendChild(row);
 
-    row.scrollIntoView({
-      behavior: "smooth",
-      block: "end"
+    row.scrollIntoView({behavior:"smooth",block:"end"});
+  }
+
+  function resizeInput(){
+    const box=$("question");
+    box.style.height="auto";
+    box.style.height=Math.min(box.scrollHeight,150)+"px";
+  }
+
+  function clearImage(){
+    selectedImage=null;
+    $("imageInput").value="";
+    $("imageInfo").style.display="none";
+    $("imageName").textContent="";
+  }
+
+  function readImage(file){
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=()=>reject(new Error("خواندن تصویر ناموفق بود."));
+      reader.readAsDataURL(file);
     });
   }
 
-  function resizeInput() {
-    const box = $("question");
-    box.style.height = "auto";
-    box.style.height = Math.min(box.scrollHeight, 150) + "px";
-  }
+  $("imageInput").addEventListener("change",()=>{
+    const file=$("imageInput").files[0];
+    if(!file){clearImage();return;}
 
-  $("question").addEventListener("input", resizeInput);
+    const allowed=["image/jpeg","image/png","image/webp"];
 
-  $("newChat").addEventListener("click", () => {
-    messages = [];
-    $("messages").innerHTML = "";
-
-    addMessage(
-      "سلام! من بگال هستم. سؤالت را بنویس تا کمکت کنم.",
-      "assistant"
-    );
-
-    status("");
-    $("question").value = "";
-    resizeInput();
-  });
-
-  $("chatForm").addEventListener("submit", async event => {
-    event.preventDefault();
-
-    const question = $("question").value.trim();
-
-    if (!question) {
-      status("لطفاً ابتدا سؤالت را بنویس.");
+    if(!allowed.includes(file.type)){
+      clearImage();
+      status("فقط تصویر JPG، PNG یا WEBP مجاز است.");
       return;
     }
 
-    if (used >= LIMIT) {
+    if(file.size>5*1024*1024){
+      clearImage();
+      status("حجم تصویر باید کمتر از ۵ مگابایت باشد.");
+      return;
+    }
+
+    selectedImage=file;
+    $("imageName").textContent="📷 "+file.name;
+    $("imageInfo").style.display="flex";
+    status("");
+  });
+
+  $("removeImage").addEventListener("click",clearImage);
+
+  $("question").addEventListener("input",resizeInput);
+
+  $("newChat").addEventListener("click",()=>{
+    messages=[];
+    $("messages").innerHTML="";
+    addMessage("سلام! من بگال هستم. سؤالت را بنویس یا تصویری بفرست.","assistant");
+    $("question").value="";
+    clearImage();
+    resizeInput();
+    status("");
+  });
+
+  $("chatForm").addEventListener("submit",async event=>{
+    event.preventDefault();
+
+    const question=$("question").value.trim();
+    const imageFile=selectedImage;
+
+    if(!question&&!imageFile){
+      status("لطفاً سؤال بنویس یا تصویری انتخاب کن.");
+      return;
+    }
+
+    if(used>=LIMIT){
       status("۱۰ سؤال رایگان تمام شده است.");
       return;
     }
 
-    $("send").disabled = true;
-    status("بگال در حال فکر کردن است...");
+    $("send").disabled=true;
+    status("بگال در حال بررسی سؤال شماست...");
 
-    addMessage(question, "user");
+    let content=question;
+    let previewUrl=null;
 
-    const nextMessages = [
-      ...messages,
-      { role: "user", content: question }
-    ];
+    try{
+      if(imageFile){
+        const imageData=await readImage(imageFile);
+        previewUrl=imageData;
 
-    try {
-      const response = await fetch(API + "/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          messages: nextMessages
-        })
+        content=[
+          {
+            type:"text",
+            text:question || "لطفاً این تصویر را بررسی کن و به فارسی توضیح بده."
+          },
+          {
+            type:"image_url",
+            image_url:{url:imageData}
+          }
+        ];
+      }
+
+      addMessage(question || "این تصویر را بررسی کن.", "user",previewUrl);
+
+      const nextMessages=[
+        ...messages,
+        {role:"user",content:content}
+      ];
+
+      const response=await fetch(API+"/chat",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({messages:nextMessages})
       });
 
-      const data = await response.json().catch(() => ({}));
+      const data=await response.json().catch(()=>({}));
 
-      if (!response.ok) {
+      if(!response.ok){
         throw new Error(data.error || "خطا در دریافت پاسخ");
       }
 
-      const answer =
+      const answer=
         data.choices?.[0]?.message?.content ||
         data.reply ||
         data.answer;
 
-      if (!answer) {
+      if(!answer){
         throw new Error("پاسخ خالی دریافت شد.");
       }
 
-      const answerText =
-        typeof answer === "string"
-          ? answer
-          : JSON.stringify(answer);
+      const answerText=typeof answer==="string"
+        ?answer:JSON.stringify(answer);
 
-      messages = [
+      messages=[
         ...nextMessages,
-        { role: "assistant", content: answer }
+        {role:"assistant",content:answer}
       ];
 
-      addMessage(answerText, "assistant");
+      addMessage(answerText,"assistant");
 
       used++;
-      try {
-        localStorage.setItem(STORAGE_KEY, String(used));
-      } catch (e) {}
+      try{
+        localStorage.setItem(STORAGE_KEY,String(used));
+      }catch(e){}
 
       updateQuota();
-
-      $("question").value = "";
+      $("question").value="";
+      clearImage();
       resizeInput();
       status("");
 
-    } catch (error) {
-      status("پاسخ دریافت نشد. اتصال سرور را بررسی کن.");
-    } finally {
-      $("send").disabled = false;
+    }catch(error){
+      console.error(error);
+      status(error.message || "پاسخ دریافت نشد. اتصال سرور را بررسی کن.");
+    }finally{
+      $("send").disabled=false;
       $("question").focus();
     }
   });
 
-  $("question").addEventListener("keydown", event => {
-    if (event.key === "Enter" && !event.shiftKey) {
+  $("question").addEventListener("keydown",event=>{
+    if(event.key==="Enter"&&!event.shiftKey){
       event.preventDefault();
       $("chatForm").requestSubmit();
     }
@@ -479,6 +400,5 @@ footer {
   updateQuota();
 })();
 </script>
-
 </body>
-</html>
+  </html>
