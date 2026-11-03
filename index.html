@@ -9,226 +9,311 @@
 <style>
 :root {
   --bg: #080d18;
-  --panel: #121d30;
-  --border: #293954;
+  --panel: #111c2e;
+  --panel2: #17243a;
+  --border: #263955;
   --blue: #2864e8;
-  --light: #91c4ff;
+  --light: #80b7ff;
   --text: #f4f7ff;
-  --muted: #aab5c8;
+  --muted: #9eacc2;
 }
-* { box-sizing: border-box; }
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
   font-family: Tahoma, Arial, sans-serif;
-  line-height: 1.8;
+  min-height: 100vh;
 }
+
 header {
-  text-align: center;
-  background: #111a2d;
+  height: 66px;
+  background: #101a2b;
   border-bottom: 1px solid var(--border);
-  padding: 20px 12px;
-}
-header h1 {
-  margin: 0;
-  color: #70aaff;
-  font-size: 34px;
-}
-header p { margin: 4px 0 0; }
-main {
-  width: 100%;
-  max-width: 680px;
-  margin: auto;
-  padding: 14px 11px 32px;
-}
-.card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 17px;
-  padding: 15px;
-  margin-bottom: 13px;
-  min-width: 0;
-}
-h2 { font-size: 19px; margin: 0 0 12px; }
-.muted { color: var(--muted); font-size: 13px; }
-.center { text-align: center; }
-.card-number {
-  direction: ltr;
-  text-align: center;
-  color: var(--light);
-  font-size: clamp(20px, 5.5vw, 30px);
-  font-weight: bold;
-  overflow-wrap: anywhere;
-  margin: 12px 0;
-}
-button {
-  width: 100%;
-  min-height: 45px;
-  padding: 10px 12px;
-  background: var(--blue);
-  color: white;
-  border: 0;
-  border-radius: 11px;
-  font: inherit;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:disabled { opacity: .6; }
-.plans { display: grid; gap: 8px; }
-.plan {
   display: flex;
   align-items: center;
-  gap: 9px;
-  padding: 8px 11px;
-  border: 1px solid var(--border);
-  border-radius: 11px;
-  background: #0d1728;
-  cursor: pointer;
-  min-width: 0;
+  justify-content: space-between;
+  padding: 0 15px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
 }
-.plan input {
-  width: 18px;
-  height: 18px;
-  flex-shrink: 0;
-  accent-color: var(--blue);
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
-.plan span { min-width: 0; }
-.plan strong {
-  display: block;
-  font-size: 14px;
-  line-height: 1.7;
+
+.logo {
+  width: 39px;
+  height: 39px;
+  border-radius: 13px;
+  background: linear-gradient(135deg, #347cff, #153b91);
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+  font-weight: bold;
 }
-.price {
-  display: block;
+
+.brand h1 {
   color: var(--light);
-  font-size: 14px;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
+  font-size: 22px;
+  margin: 0;
 }
-input[type="file"], textarea {
-  display: block;
-  width: 100%;
-  padding: 10px;
-  margin: 6px 0 12px;
-  background: #0b1322;
-  color: var(--text);
+
+.new-chat {
+  width: auto;
+  min-height: 38px;
+  padding: 7px 12px;
+  background: var(--panel2);
   border: 1px solid var(--border);
-  border-radius: 11px;
+  border-radius: 10px;
+  color: white;
   font: inherit;
+  cursor: pointer;
 }
-textarea { min-height: 90px; resize: vertical; }
+
+main {
+  max-width: 850px;
+  margin: auto;
+  padding: 18px 13px 20px;
+}
+
+.welcome {
+  text-align: center;
+  padding: 35px 12px 22px;
+}
+
+.welcome h2 {
+  color: var(--light);
+  font-size: 25px;
+  margin: 0 0 8px;
+}
+
+.welcome p {
+  color: var(--muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+.quota {
+  background: #101d32;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 11px 14px;
+  margin: 5px 0 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+#remaining {
+  color: var(--light);
+  font-weight: bold;
+}
+
 #messages {
   display: flex;
   flex-direction: column;
-  gap: 9px;
-  margin-bottom: 12px;
+  gap: 15px;
+  padding: 8px 0 20px;
 }
-.msg {
-  background: #1b2a40;
-  border-radius: 13px;
-  padding: 11px 13px;
+
+.msg-row {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+}
+
+.msg-row.user {
+  flex-direction: row-reverse;
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: #1c3765;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.msg-row.assistant .avatar {
+  background: linear-gradient(135deg, #347cff, #153b91);
+}
+
+.bubble {
+  max-width: 85%;
+  padding: 12px 15px;
+  border-radius: 15px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  line-height: 2;
+  font-size: 14px;
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
-.msg.user { background: #1d3970; }
-.status { font-size: 13px; overflow-wrap: anywhere; }
-.ok { color: #9de5b1; }
-.error { color: #ffb4b4; }
-.notice {
-  margin-top: 10px;
+
+.user .bubble {
+  background: #19386d;
+  border-color: #2855a0;
+}
+
+.composer {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(transparent, var(--bg) 18%);
+  padding: 18px 0 10px;
+}
+
+.input-box {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  background: #111d30;
+  border: 1px solid #344967;
+  border-radius: 17px;
   padding: 10px;
-  border-radius: 11px;
-  background: #2a2415;
-  border: 1px solid #655326;
-  color: #ffe7a6;
+  box-shadow: 0 8px 30px #0005;
+}
+
+textarea {
+  flex: 1;
+  min-width: 0;
+  min-height: 42px;
+  max-height: 150px;
+  resize: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: white;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.9;
+  padding: 7px;
+}
+
+textarea::placeholder {
+  color: #8b9bb3;
+}
+
+#send {
+  width: 43px;
+  height: 43px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 12px;
+  background: var(--blue);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#send:disabled {
+  opacity: .5;
+}
+
+.status {
+  min-height: 23px;
+  text-align: center;
+  color: var(--muted);
   font-size: 12px;
+  padding-top: 5px;
+}
+
+footer {
+  text-align: center;
+  color: #71819a;
+  font-size: 11px;
+  padding: 5px 0 15px;
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 10px 10px 15px;
+  }
+
+  .welcome {
+    padding-top: 27px;
+  }
+
+  .welcome h2 {
+    font-size: 22px;
+  }
+
+  .bubble {
+    max-width: 88%;
+    font-size: 13px;
+  }
 }
 </style>
 </head>
 
 <body>
+
 <header>
-  <h1>بگال</h1>
-  <p>دستیار هوشمند فارسی شما</p>
+  <div class="brand">
+    <div class="logo">ب</div>
+    <h1>بگال</h1>
+  </div>
+
+  <button class="new-chat" id="newChat">＋ گفت‌وگوی جدید</button>
 </header>
 
+<main>
 
-
-  <!-- اشتراک‌ها -->
-  <section class="card" id="subscriptions">
-    <h2>⭐ اشتراک‌های بگال</h2>
-    <p class="muted">اشتراک موردنظرت را انتخاب کن.</p>
-
-    <div class="plans">
-      <label class="plan">
-        <input type="radio" name="plan" value="1-month" checked>
-        <span>
-          <strong>اشتراک یک‌ماهه</strong>
-          <span class="price">۳۰۰٬۰۰۰ تومان</span>
-        </span>
-      </label>
-
-      <label class="plan">
-        <input type="radio" name="plan" value="3-months">
-        <span>
-          <strong>اشتراک سه‌ماهه</strong>
-          <span class="price">۵۰۰٬۰۰۰ تومان</span>
-        </span>
-      </label>
-
-      <label class="plan">
-        <input type="radio" name="plan" value="1-year">
-        <span>
-          <strong>اشتراک یک‌ساله</strong>
-          <span class="price">۱٬۵۰۰٬۰۰۰ تومان</span>
-        </span>
-      </label>
-    </div>
-
-    
-
-  <!-- سهمیه رایگان -->
-  <section class="card">
-    <h2>🎁 سؤال‌های رایگان</h2>
-    <div id="remaining"
-         style="font-size:19px;color:var(--light);font-weight:bold">
-      ۱۰ سؤال رایگان باقی‌مانده
-    </div>
-    <p class="muted">پس از هر پاسخ موفق، یک سؤال از سهمیه کم می‌شود.</p>
+  <section class="welcome" id="welcome">
+    <h2>سلام! من بگال هستم 👋</h2>
+    <p>دستیار هوشمند فارسی؛ سؤالت را بپرس تا کمکت کنم.</p>
   </section>
 
-  <!-- گفت‌وگو -->
-  <section class="card" id="chat">
-    <h2>💬 گفت‌وگو با بگال</h2>
+  <section class="quota">
+    <span>🎁 سهمیه سؤال‌های رایگان</span>
+    <span id="remaining">۱۰ سؤال باقی‌مانده</span>
+  </section>
 
-    <div id="messages" aria-live="polite">
-      <div class="msg">سلام! من بگال هستم. سؤالت را بنویس.</div>
+  <section id="messages" aria-live="polite">
+    <div class="msg-row assistant">
+      <div class="avatar">ب</div>
+      <div class="bubble">
+        سلام! خوش آمدی 🌟
+
+        من بگال هستم. می‌توانی درباره درس، علم، فناوری و موضوعات مختلف از من سؤال بپرسی.
+      </div>
     </div>
+  </section>
 
+  <section class="composer">
     <form id="chatForm">
-      <label for="question">سؤالت را بنویس:</label>
-      <textarea
-        id="question"
-        placeholder="سؤالت را اینجا بنویس..."
-      ></textarea>
+      <div class="input-box">
+        <textarea
+          id="question"
+          rows="1"
+          placeholder="پیامت را برای بگال بنویس..."
+          autocomplete="off"
+        ></textarea>
 
-      <label for="chatImage">📷 انتخاب تصویر برای سؤال</label>
-      <input
-        id="chatImage"
-        type="file"
-        accept="image/jpeg,image/png,image/webp"
-      >
-
-      <button type="submit" id="send">ارسال سؤال</button>
-      <p id="chatStatus" class="status" aria-live="polite"></p>
+        <button type="submit" id="send" aria-label="ارسال">➤</button>
+      </div>
+      <div id="chatStatus" class="status"></div>
     </form>
-
-    <div class="notice">
-      پاسخ‌گویی به تصویر به پشتیبانی موتور هوش مصنوعی بستگی دارد.
-      اگر API از تصویر پشتیبانی نکند، سرور باید اصلاح شود.
-    </div>
   </section>
+
+  <footer>
+    بگال | دستیار هوشمند فارسی شما
+  </footer>
+
 </main>
 
 <script>
@@ -236,6 +321,8 @@ textarea { min-height: 90px; resize: vertical; }
   const API = "https://begal.onrender.com";
   const LIMIT = 10;
   const STORAGE_KEY = "begal_questions_used_v1";
+
+  const $ = id => document.getElementById(id);
 
   let used = 0;
   let messages = [];
@@ -245,163 +332,101 @@ textarea { min-height: 90px; resize: vertical; }
       0,
       Math.min(LIMIT, Number(localStorage.getItem(STORAGE_KEY)) || 0)
     );
-  } catch (_) {}
+  } catch (e) {}
 
-  const $ = id => document.getElementById(id);
-
-  function showStatus(id, message, type = "") {
-    $(id).textContent = message;
-    $(id).className = "status " + type;
-  }
-
-  function updateRemaining() {
+  function updateQuota() {
     $("remaining").textContent =
-      `${Math.max(0, LIMIT - used)} سؤال رایگان باقی‌مانده`;
+      Math.max(0, LIMIT - used) + " سؤال باقی‌مانده";
   }
 
-  function addMessage(text, who) {
-    const el = document.createElement("div");
-    el.className = "msg" + (who === "user" ? " user" : "");
-    el.textContent = text;
-    $("messages").appendChild(el);
+  function status(message) {
+    $("chatStatus").textContent = message;
   }
 
-  function readImage(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = () => reject(new Error("خواندن تصویر ناموفق بود."));
-      reader.readAsDataURL(file);
+  function addMessage(text, role) {
+    const row = document.createElement("div");
+    row.className = "msg-row " + role;
+
+    const avatar = document.createElement("div");
+    avatar.className = "avatar";
+    avatar.textContent = role === "user" ? "ش" : "ب";
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.textContent = text;
+
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    $("messages").appendChild(row);
+
+    row.scrollIntoView({
+      behavior: "smooth",
+      block: "end"
     });
   }
 
+  function resizeInput() {
+    const box = $("question");
+    box.style.height = "auto";
+    box.style.height = Math.min(box.scrollHeight, 150) + "px";
+  }
 
+  $("question").addEventListener("input", resizeInput);
 
+  $("newChat").addEventListener("click", () => {
+    messages = [];
+    $("messages").innerHTML = "";
 
-  // ارسال فیش
-  $("receiptForm").addEventListener("submit", async event => {
-    event.preventDefault();
+    addMessage(
+      "سلام! من بگال هستم. سؤالت را بنویس تا کمکت کنم.",
+      "assistant"
+    );
 
-    const file = $("receipt").files[0];
-    const plan = document.querySelector('input[name="plan"]:checked');
-
-  
-      return;
-    
-
-  
-    
-
-    if (file.size > 8 * 1024 * 1024) {
-      showStatus("receiptStatus", "حجم تصویر باید کمتر از ۸ مگابایت باشد.", "error");
-      return;
-    }
-
-    const form = new FormData();
-    form.append("receipt", file);
-    form.append("plan", plan.value);
-
-    $("receiptButton").disabled = true;
-    showStatus("receiptStatus", "در حال ارسال فیش...");
-
-    try {
-      const response = await fetch(API + "/upload-receipt", {
-        method: "POST",
-        body: form
-      });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(data.error || "ارسال ناموفق بود.");
-      }
-
-      showStatus(
-        "receiptStatus",
-        "فیش ارسال شد؛ تأیید پرداخت و فعال‌سازی اشتراک باید جداگانه انجام شود.",
-        "ok"
-      );
-    } catch (_) {
-      showStatus(
-        "receiptStatus",
-        "ارسال فیش ناموفق بود. اتصال اینترنت و سرور را بررسی کن.",
-        "error"
-      );
-    } finally {
-      $("receiptButton").disabled = false;
-    }
+    status("");
+    $("question").value = "";
+    resizeInput();
   });
 
-  // گفت‌وگو با هوش مصنوعی
   $("chatForm").addEventListener("submit", async event => {
     event.preventDefault();
 
     const question = $("question").value.trim();
-    const imageFile = $("chatImage").files[0];
 
-    if (!question && !imageFile) {
-      showStatus("chatStatus", "سؤال بنویس یا تصویری انتخاب کن.", "error");
+    if (!question) {
+      status("لطفاً ابتدا سؤالت را بنویس.");
       return;
     }
 
     if (used >= LIMIT) {
-      showStatus(
-        "chatStatus",
-        "سهمیه ۱۰ سؤال رایگان تمام شده است. برای ادامه باید اشتراک فعال شود.",
-        "error"
-      );
-      return;
-    }
-
-    if (imageFile && ![
-      "image/jpeg", "image/png", "image/webp"
-    ].includes(imageFile.type)) {
-      showStatus("chatStatus", "تصویر باید JPG، PNG یا WEBP باشد.", "error");
-      return;
-    }
-
-    if (imageFile && imageFile.size > 5 * 1024 * 1024) {
-      showStatus("chatStatus", "حجم تصویر باید کمتر از ۵ مگابایت باشد.", "error");
+      status("۱۰ سؤال رایگان تمام شده است.");
       return;
     }
 
     $("send").disabled = true;
-    showStatus("chatStatus", "در حال دریافت پاسخ...");
+    status("بگال در حال فکر کردن است...");
+
+    addMessage(question, "user");
+
+    const nextMessages = [
+      ...messages,
+      { role: "user", content: question }
+    ];
 
     try {
-      let content = question;
-
-      if (imageFile) {
-        const imageData = await readImage(imageFile);
-        content = [
-          {
-            type: "text",
-            text: question || "لطفاً این تصویر را بررسی کن و به فارسی توضیح بده."
-          },
-          {
-            type: "image_url",
-            image_url: { url: imageData }
-          }
-        ];
-      }
-
-      addMessage(question || "تصویر ارسال شد.", "user");
-
-      const nextMessages = [
-        ...messages,
-        { role: "user", content: content }
-      ];
-
       const response = await fetch(API + "/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: nextMessages })
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          messages: nextMessages
+        })
       });
 
       const data = await response.json().catch(() => ({}));
 
       if (!response.ok) {
-        throw new Error(data.error || "خطای سرور");
+        throw new Error(data.error || "خطا در دریافت پاسخ");
       }
 
       const answer =
@@ -410,41 +435,50 @@ textarea { min-height: 90px; resize: vertical; }
         data.answer;
 
       if (!answer) {
-        throw new Error("پاسخ خالی بود.");
+        throw new Error("پاسخ خالی دریافت شد.");
       }
+
+      const answerText =
+        typeof answer === "string"
+          ? answer
+          : JSON.stringify(answer);
 
       messages = [
         ...nextMessages,
         { role: "assistant", content: answer }
       ];
 
-      addMessage(
-        typeof answer === "string" ? answer : JSON.stringify(answer),
-        "assistant"
-      );
+      addMessage(answerText, "assistant");
 
-      used = Math.min(LIMIT, used + 1);
-
+      used++;
       try {
         localStorage.setItem(STORAGE_KEY, String(used));
-      } catch (_) {}
+      } catch (e) {}
 
-      updateRemaining();
+      updateQuota();
+
       $("question").value = "";
-      $("chatImage").value = "";
-      showStatus("chatStatus", "");
+      resizeInput();
+      status("");
 
-    } catch (_) {
-      showStatus(
-        "chatStatus",
-        "پاسخ دریافت نشد. سرور یا API را بررسی کن.",
-        "error"
-      );
+    } catch (error) {
+      status("پاسخ دریافت نشد. اتصال سرور را بررسی کن.");
     } finally {
       $("send").disabled = false;
+      $("question").focus();
     }
   });
+
+  $("question").addEventListener("keydown", event => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      event.preventDefault();
+      $("chatForm").requestSubmit();
+    }
+  });
+
+  updateQuota();
 })();
 </script>
+
 </body>
-        </html>
+</html>
