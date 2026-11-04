@@ -2,7 +2,7 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#080d18">
 <title>بگال | دستیار هوشمند فارسی</title>
 
@@ -17,388 +17,540 @@
   --text:#f4f7ff;
   --muted:#9eacc2;
 }
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Tahoma,Arial,sans-serif;min-height:100vh;
+
+* {
+  box-sizing:border-box;
 }
-header{
-  height:66px;background:#101a2b;border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 15px;position:sticky;top:0;z-index:5;
+
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+  min-height:100vh;
 }
-.brand{display:flex;align-items:center;gap:10px}
-.logo{
-  width:39px;height:39px;border-radius:13px;
-  background:linear-gradient(135deg,#347cff,#153b91);
-  display:grid;place-items:center;font-size:21px;font-weight:bold;
+
+header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 5%;
+  background:#0d1627;
+  border-bottom:1px solid var(--border);
+  position:sticky;
+  top:0;
+  z-index:10;
 }
-.brand h1{color:var(--light);font-size:22px;margin:0}
-button{font-family:inherit;cursor:pointer}
-.new-chat{
-  width:auto;min-height:38px;padding:7px 12px;
-  background:var(--panel2);border:1px solid var(--border);
-  border-radius:10px;color:white;font:inherit;
+
+.logo {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:22px;
+  font-weight:bold;
+  color:var(--light);
 }
-main{max-width:850px;margin:auto;padding:18px 13px 20px}
-.welcome{text-align:center;padding:35px 12px 22px}
-.welcome h2{color:var(--light);font-size:25px;margin:0 0 8px}
-.welcome p{color:var(--muted);font-size:14px;margin:0}
-.quota{
-  background:#101d32;border:1px solid var(--border);
-  border-radius:13px;padding:11px 14px;margin:5px 0 18px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:8px;font-size:13px;
+
+.logo-icon {
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  background:linear-gradient(135deg,#2864e8,#163c9c);
+  display:grid;
+  place-items:center;
+  color:white;
 }
-#remaining{color:var(--light);font-weight:bold}
-#messages{display:flex;flex-direction:column;gap:15px;padding:8px 0 20px}
-.msg-row{display:flex;gap:9px;align-items:flex-start}
-.msg-row.user{flex-direction:row-reverse}
-.avatar{
-  width:34px;height:34px;flex-shrink:0;border-radius:11px;
-  display:grid;place-items:center;background:#1c3765;color:white;
-  font-size:14px;font-weight:bold;
+
+button {
+  border:0;
+  cursor:pointer;
+  font-family:inherit;
 }
-.msg-row.assistant .avatar{
-  background:linear-gradient(135deg,#347cff,#153b91);
+
+.new-chat {
+  padding:11px 15px;
+  border-radius:10px;
+  color:white;
+  background:var(--blue);
 }
-.bubble{
-  max-width:85%;padding:12px 15px;border-radius:15px;
-  background:var(--panel2);border:1px solid var(--border);
-  line-height:2;font-size:14px;white-space:pre-wrap;overflow-wrap:anywhere;
+
+main {
+  max-width:850px;
+  margin:35px auto;
+  padding:0 15px;
 }
-.user .bubble{background:#19386d;border-color:#2855a0}
-.bubble img{display:block;max-width:100%;max-height:250px;border-radius:10px;margin-bottom:8px}
-.composer{
-  position:sticky;bottom:0;
-  background:linear-gradient(transparent,var(--bg) 18%);
-  padding:18px 0 10px;
+
+.welcome {
+  text-align:center;
+  padding:30px 10px;
 }
-.input-box{
-  display:flex;align-items:flex-end;gap:8px;
-  background:#111d30;border:1px solid #344967;
-  border-radius:17px;padding:10px;box-shadow:0 8px 30px #0005;
+
+.welcome h1 {
+  color:var(--light);
+  font-size:29px;
 }
-textarea{
-  flex:1;min-width:0;min-height:42px;max-height:150px;
-  resize:none;border:0;outline:none;background:transparent;
-  color:white;font:inherit;font-size:14px;line-height:1.9;padding:7px;
+
+.welcome p {
+  color:var(--muted);
+  line-height:2;
 }
-textarea::placeholder{color:#8b9bb3}
-#send{
-  width:43px;height:43px;flex-shrink:0;border:0;
-  border-radius:12px;background:var(--blue);color:white;font-size:20px;
+
+.quota {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:15px;
+  margin-bottom:20px;
+  text-align:center;
+  color:var(--light);
 }
-#send:disabled{opacity:.5}
-.attach{
-  width:43px;height:43px;flex-shrink:0;border-radius:12px;
-  display:grid;place-items:center;background:#1b2d49;
-  border:1px solid #344967;color:var(--light);font-size:21px;
+
+#messages {
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  margin-bottom:20px;
 }
-#imageInput{display:none}
-#imageInfo{
-  display:none;color:var(--light);font-size:12px;
-  padding:8px 12px 0;align-items:center;gap:8px;
+
+.message {
+  padding:15px;
+  border-radius:14px;
+  line-height:2;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
 }
-#removeImage{
-  width:25px;height:25px;border:0;border-radius:8px;
-  background:#59303b;color:white;
+
+.user {
+  background:#17366b;
+  margin-right:35px;
 }
-.status{
-  min-height:23px;text-align:center;color:var(--muted);
-  font-size:12px;padding-top:5px;
+
+.assistant {
+  background:var(--panel);
+  border:1px solid var(--border);
+  margin-left:15px;
 }
-footer{text-align:center;color:#71819a;font-size:11px;padding:5px 0 15px}
-@media(max-width:480px){
-  main{padding:10px 10px 15px}
-  .welcome{padding-top:27px}
-  .welcome h2{font-size:22px}
-  .bubble{max-width:88%;font-size:13px}
+
+.composer {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px;
+}
+
+textarea {
+  width:100%;
+  min-height:85px;
+  resize:vertical;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:white;
+  font-family:inherit;
+  font-size:15px;
+  padding:10px;
+}
+
+textarea::placeholder {
+  color:var(--muted);
+}
+
+.actions {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+}
+
+.send {
+  background:var(--blue);
+  color:white;
+  padding:12px 25px;
+  border-radius:10px;
+}
+
+.send:disabled {
+  opacity:.5;
+}
+
+.image-label {
+  color:var(--light);
+  font-size:13px;
+  cursor:pointer;
+}
+
+#imageInput {
+  display:none;
+}
+
+.status {
+  color:var(--muted);
+  text-align:center;
+  padding:12px;
+  font-size:13px;
+}
+
+#subscriptionPage {
+  display:none;
+}
+
+.subscription-title {
+  text-align:center;
+  margin:25px 0;
+}
+
+.subscription-title h1 {
+  color:var(--light);
+  font-size:27px;
+}
+
+.subscription-title p {
+  color:var(--muted);
+  line-height:2;
+}
+
+.plans {
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;
+}
+
+.plan {
+  background:linear-gradient(145deg,#14233b,#0e1728);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:22px;
+  text-align:center;
+}
+
+.plan.featured {
+  border:2px solid var(--blue);
+}
+
+.plan h2 {
+  color:var(--light);
+}
+
+.price {
+  font-size:27px;
+  font-weight:bold;
+  margin:20px 0;
+}
+
+.price small {
+  font-size:13px;
+  color:var(--muted);
+}
+
+.plan p {
+  color:var(--muted);
+  line-height:2;
+}
+
+.pay-button {
+  display:block;
+  text-decoration:none;
+  background:var(--blue);
+  color:white;
+  padding:14px;
+  border-radius:11px;
+  margin-top:18px;
+}
+
+.notice {
+  background:#17243a;
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:15px;
+  margin-top:20px;
+  color:var(--muted);
+  line-height:2;
+  font-size:13px;
+}
+
+footer {
+  text-align:center;
+  padding:30px 10px;
+  color:#71819b;
+  font-size:12px;
+}
+
+@media(min-width:650px) {
+  .plans {
+    grid-template-columns:repeat(3,1fr);
+  }
 }
 </style>
 </head>
 
 <body>
+
 <header>
-  <div class="brand">
-    <div class="logo">ب</div>
-    <h1>بگال</h1>
+  <div class="logo">
+    <div class="logo-icon">ب</div>
+    بگال
   </div>
   <button class="new-chat" id="newChat">＋ گفت‌وگوی جدید</button>
 </header>
 
 <main>
-  <section class="welcome">
-    <h2>سلام! من بگال هستم 👋</h2>
-    <p>دستیار هوشمند فارسی؛ سؤالت را بپرس تا کمکت کنم.</p>
-  </section>
 
-  <section class="quota">
-    <span>🎁 سهمیه سؤال‌های رایگان</span>
-    <span id="remaining">۱۰ سؤال باقی‌مانده</span>
-  </section>
+<section id="chatPage">
 
-  <section id="messages" aria-live="polite">
-    <div class="msg-row assistant">
-      <div class="avatar">ب</div>
-      <div class="bubble">سلام! خوش آمدی 🌟
-من بگال هستم. می‌توانی سؤال متنی یا تصویری بپرسی.</div>
+  <div class="welcome">
+    <h1>سلام! من بگال هستم</h1>
+    <p>دستیار هوشمند فارسی شما؛ آماده پاسخ‌گویی به پرسش‌هایت.</p>
+  </div>
+
+  <div class="quota" id="remaining">
+    در حال بررسی سهمیه...
+  </div>
+
+  <div id="messages"></div>
+
+  <form class="composer" id="chatForm">
+    <textarea id="question" placeholder="پیام خود را برای بگال بنویسید..." required></textarea>
+
+    <div class="actions">
+      <label class="image-label" for="imageInput">
+        📷 ارسال تصویر
+      </label>
+
+      <input type="file" id="imageInput" accept="image/jpeg,image/png,image/webp">
+
+      <button class="send" id="send" type="submit">
+        ارسال پیام
+      </button>
     </div>
-  </section>
+  </form>
 
-  <section class="composer">
-    <form id="chatForm">
-      <div class="input-box">
-        <label class="attach" for="imageInput" title="انتخاب تصویر">📎</label>
-        <input
-          id="imageInput"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-        >
-        <textarea
-          id="question"
-          rows="1"
-          placeholder="پیامت را برای بگال بنویس..."
-          autocomplete="off"
-        ></textarea>
-        <button type="submit" id="send" aria-label="ارسال">➤</button>
+  <div class="status" id="chatStatus"></div>
+</section>
+
+<section id="subscriptionPage">
+
+  <div class="subscription-title">
+    <h1>اشتراک بگال</h1>
+    <p>
+      سهمیه ۱۰ سؤال رایگان شما تمام شده است.<br>
+      برای ادامه استفاده از بگال، اشتراک موردنظر را انتخاب کنید.
+    </p>
+  </div>
+
+  <div class="plans">
+
+    <div class="plan">
+      <h2>اشتراک یک‌ماهه</h2>
+      <div class="price">
+        ۳۰۰٬۰۰۰
+        <small>تومان</small>
       </div>
+      <p>۳۰ روز استفاده از بگال</p>
+      <a class="pay-button" href="https://pay.pexn.ir/lTaNMIs/3000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal" target="_blank" rel="noopener">
+        خرید اشتراک
+      </a>
+    </div>
 
-      <div id="imageInfo">
-        <span id="imageName"></span>
-        <button type="button" id="removeImage">×</button>
+    <div class="plan featured">
+      <h2>اشتراک سه‌ماهه</h2>
+      <div class="price">
+        ۵۰۰٬۰۰۰
+        <small>تومان</small>
       </div>
+      <p>۹۰ روز استفاده از بگال</p>
+      <a class="pay-button" href="https://pay.pexn.ir/lTaNMIs/5000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%D8%B3%D9%87%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal" target="_blank" rel="noopener">
+        خرید اشتراک
+      </a>
+    </div>
 
-      <div id="chatStatus" class="status"></div>
-    </form>
-  </section>
+    <div class="plan">
+      <h2>اشتراک یک‌ساله</h2>
+      <div class="price">
+        ۱٬۵۰۰٬۰۰۰
+        <small>تومان</small>
+      </div>
+      <p>۳۶۵ روز استفاده از بگال</p>
+      <a class="pay-button" href="https://pay.pexn.ir/lTaNMIs/15000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D8%B3%D8%A7%D9%84%D9%87%20Begal" target="_blank" rel="noopener">
+        خرید اشتراک
+      </a>
+    </div>
 
-  <footer>بگال | دستیار هوشمند فارسی شما</footer>
+  </div>
+
+  <div class="notice">
+    توجه: پرداخت باید توسط درگاه یا مدیر سامانه تأیید شود.
+    بازگشت از صفحه پرداخت به‌تنهایی به معنی فعال شدن اشتراک نیست.
+  </div>
+
+</section>
+
 </main>
 
+<footer>
+  بگال؛ دستیار هوشمند فارسی
+</footer>
+
 <script>
-(() => {
-  const API = "https://begal.onrender.com";
-  const LIMIT = 10;
-  const STORAGE_KEY = "begal_questions_used_v1";
-  const $ = id => document.getElementById(id);
+const API = "https://begal.onrender.com";
+const LIMIT = 10;
+const STORAGE_KEY = "begal_questions_used_v1";
 
-  let used = 0;
-  let messages = [];
-  let selectedImage = null;
+let used = Number(localStorage.getItem(STORAGE_KEY) || 0);
+let messages = [];
 
-  try {
-    used = Math.max(0,Math.min(
-      LIMIT,Number(localStorage.getItem(STORAGE_KEY)) || 0
-    ));
-  } catch(e) {}
+const chatPage = document.getElementById("chatPage");
+const subscriptionPage = document.getElementById("subscriptionPage");
+const remaining = document.getElementById("remaining");
+const chatForm = document.getElementById("chatForm");
+const question = document.getElementById("question");
+const send = document.getElementById("send");
+const statusBox = document.getElementById("chatStatus");
+const messagesBox = document.getElementById("messages");
+const imageInput = document.getElementById("imageInput");
 
-  function updateQuota(){
-    $("remaining").textContent =
-      Math.max(0,LIMIT-used) + " سؤال باقی‌مانده";
+function showSubscription() {
+  chatPage.style.display = "none";
+  subscriptionPage.style.display = "block";
+  document.getElementById("newChat").style.display = "none";
+}
+
+function updateQuota() {
+  const left = Math.max(0, LIMIT - used);
+
+  remaining.textContent =
+    "سؤال‌های رایگان باقی‌مانده: " + left + " از " + LIMIT;
+
+  if (left <= 0) {
+    showSubscription();
+  }
+}
+
+function addMessage(role, text) {
+  const div = document.createElement("div");
+  div.className = "message " + role;
+  div.textContent = text;
+  messagesBox.appendChild(div);
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+function fileToDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+chatForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  if (used >= LIMIT) {
+    showSubscription();
+    return;
   }
 
-  function status(message){
-    $("chatStatus").textContent = message;
-  }
+  const text = question.value.trim();
+  const file = imageInput.files[0];
 
-  function addMessage(text,role,imageUrl=null){
-    const row=document.createElement("div");
-    row.className="msg-row "+role;
+  if (!text && !file) return;
 
-    const avatar=document.createElement("div");
-    avatar.className="avatar";
-    avatar.textContent=role==="user"?"ش":"ب";
+  const content = [];
 
-    const bubble=document.createElement("div");
-    bubble.className="bubble";
-
-    if(imageUrl){
-      const img=document.createElement("img");
-      img.src=imageUrl;
-      img.alt="تصویر ارسال‌شده";
-      bubble.appendChild(img);
-    }
-
-    if(text){
-      const content=document.createElement("div");
-      content.textContent=text;
-      bubble.appendChild(content);
-    }
-
-    row.appendChild(avatar);
-    row.appendChild(bubble);
-    $("messages").appendChild(row);
-
-    row.scrollIntoView({behavior:"smooth",block:"end"});
-  }
-
-  function resizeInput(){
-    const box=$("question");
-    box.style.height="auto";
-    box.style.height=Math.min(box.scrollHeight,150)+"px";
-  }
-
-  function clearImage(){
-    selectedImage=null;
-    $("imageInput").value="";
-    $("imageInfo").style.display="none";
-    $("imageName").textContent="";
-  }
-
-  function readImage(file){
-    return new Promise((resolve,reject)=>{
-      const reader=new FileReader();
-      reader.onload=()=>resolve(reader.result);
-      reader.onerror=()=>reject(new Error("خواندن تصویر ناموفق بود."));
-      reader.readAsDataURL(file);
+  if (text) {
+    content.push({
+      type: "text",
+      text
     });
   }
 
-  $("imageInput").addEventListener("change",()=>{
-    const file=$("imageInput").files[0];
-    if(!file){clearImage();return;}
-
-    const allowed=["image/jpeg","image/png","image/webp"];
-
-    if(!allowed.includes(file.type)){
-      clearImage();
-      status("فقط تصویر JPG، PNG یا WEBP مجاز است.");
+  if (file) {
+    if (file.size > 5 * 1024 * 1024) {
+      statusBox.textContent = "حجم تصویر باید کمتر از ۵ مگابایت باشد.";
       return;
     }
 
-    if(file.size>5*1024*1024){
-      clearImage();
-      status("حجم تصویر باید کمتر از ۵ مگابایت باشد.");
+    if (!["image/jpeg","image/png","image/webp"].includes(file.type)) {
+      statusBox.textContent = "فرمت تصویر معتبر نیست.";
       return;
     }
 
-    selectedImage=file;
-    $("imageName").textContent="📷 "+file.name;
-    $("imageInfo").style.display="flex";
-    status("");
-  });
+    const imageData = await fileToDataURL(file);
 
-  $("removeImage").addEventListener("click",clearImage);
-
-  $("question").addEventListener("input",resizeInput);
-
-  $("newChat").addEventListener("click",()=>{
-    messages=[];
-    $("messages").innerHTML="";
-    addMessage("سلام! من بگال هستم. سؤالت را بنویس یا تصویری بفرست.","assistant");
-    $("question").value="";
-    clearImage();
-    resizeInput();
-    status("");
-  });
-
-  $("chatForm").addEventListener("submit",async event=>{
-    event.preventDefault();
-
-    const question=$("question").value.trim();
-    const imageFile=selectedImage;
-
-    if(!question&&!imageFile){
-      status("لطفاً سؤال بنویس یا تصویری انتخاب کن.");
-      return;
-    }
-
-    if(used>=LIMIT){
-      status("۱۰ سؤال رایگان تمام شده است.");
-      return;
-    }
-
-    $("send").disabled=true;
-    status("بگال در حال بررسی سؤال شماست...");
-
-    let content=question;
-    let previewUrl=null;
-
-    try{
-      if(imageFile){
-        const imageData=await readImage(imageFile);
-        previewUrl=imageData;
-
-        content=[
-          {
-            type:"text",
-            text:question || "لطفاً این تصویر را بررسی کن و به فارسی توضیح بده."
-          },
-          {
-            type:"image_url",
-            image_url:{url:imageData}
-          }
-        ];
+    content.push({
+      type: "image_url",
+      image_url: {
+        url: imageData
       }
+    });
+  }
 
-      addMessage(question || "این تصویر را بررسی کن.", "user",previewUrl);
+  const userMessage = {
+    role: "user",
+    content: content.length === 1 && text && !file
+      ? text
+      : content
+  };
 
-      const nextMessages=[
-        ...messages,
-        {role:"user",content:content}
-      ];
+  messages.push(userMessage);
+  addMessage("user", text || "تصویر ارسال شد.");
 
-      const response=await fetch(API+"/chat",{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({messages:nextMessages})
-      });
+  question.value = "";
+  imageInput.value = "";
+  send.disabled = true;
+  statusBox.textContent = "بگال در حال پاسخ‌گویی است...";
 
-      const data=await response.json().catch(()=>({}));
+  try {
+    const response = await fetch(API + "/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        messages
+      })
+    });
 
-      if(!response.ok){
-        throw new Error(data.error || "خطا در دریافت پاسخ");
-      }
+    const data = await response.json();
 
-      const answer=
-        data.choices?.[0]?.message?.content ||
-        data.reply ||
-        data.answer;
-
-      if(!answer){
-        throw new Error("پاسخ خالی دریافت شد.");
-      }
-
-      const answerText=typeof answer==="string"
-        ?answer:JSON.stringify(answer);
-
-      messages=[
-        ...nextMessages,
-        {role:"assistant",content:answer}
-      ];
-
-      addMessage(answerText,"assistant");
-
-      used++;
-      try{
-        localStorage.setItem(STORAGE_KEY,String(used));
-      }catch(e){}
-
-      updateQuota();
-      $("question").value="";
-      clearImage();
-      resizeInput();
-      status("");
-
-    }catch(error){
-      console.error(error);
-      status(error.message || "پاسخ دریافت نشد. اتصال سرور را بررسی کن.");
-    }finally{
-      $("send").disabled=false;
-      $("question").focus();
+    if (!response.ok) {
+      messages.pop();
+      throw new Error(data.error || "خطا در دریافت پاسخ");
     }
-  });
 
-  $("question").addEventListener("keydown",event=>{
-    if(event.key==="Enter"&&!event.shiftKey){
-      event.preventDefault();
-      $("chatForm").requestSubmit();
-    }
-  });
+    const answer =
+      data.choices?.[0]?.message?.content ||
+      "پاسخی دریافت نشد.";
 
-  updateQuota();
-})();
+    messages.push({
+      role: "assistant",
+      content: answer
+    });
+
+    addMessage("assistant", answer);
+
+    used++;
+    localStorage.setItem(STORAGE_KEY, String(used));
+
+    updateQuota();
+    statusBox.textContent = "";
+
+  } catch (error) {
+    statusBox.textContent = error.message;
+  } finally {
+    send.disabled = false;
+  }
+});
+
+document.getElementById("newChat").addEventListener("click", () => {
+  messages = [];
+  messagesBox.innerHTML = "";
+  statusBox.textContent = "";
+  question.value = "";
+});
+
+updateQuota();
 </script>
+
 </body>
-  </html>
+</html>
