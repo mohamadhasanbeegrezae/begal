@@ -11,16 +11,105 @@ const PORT = process.env.PORT || 3000;
 // تنظیمات عمومی
 app.use(cors());
 app.use(express.json({ limit: "8mb" }));
-
-// نمایش فایل‌های سایت، از جمله index.html
 app.use(express.static(__dirname));
+
+// پلن‌های اشتراک بگال
+const PLANS = {
+  monthly: {
+    id: "monthly",
+    name: "اشتراک یک‌ماهه",
+    price: 300000,
+    currency: "تومان",
+    durationDays: 30,
+    paymentLink:
+      "https://pay.pexn.ir/lTaNMIs/3000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal"
+  },
+
+  quarterly: {
+    id: "quarterly",
+    name: "اشتراک سه‌ماهه",
+    price: 500000,
+    currency: "تومان",
+    durationDays: 90,
+    paymentLink:
+      "https://pay.pexn.ir/lTaNMIs/5000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%D8%B3%D9%87%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal"
+  },
+
+  yearly: {
+    id: "yearly",
+    name: "اشتراک یک‌ساله",
+    price: 1500000,
+    currency: "تومان",
+    durationDays: 365,
+    paymentLink:
+      "https://pay.pexn.ir/lTaNMIs/15000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D8%B3%D8%A7%D9%84%D9%87%20Begal"
+  }
+};
+
+// صفحه اصلی
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
+// بررسی سلامت سرور
+app.get("/health", (req, res) => {
+  res.json({
+    success: true,
+    message: "Begal server is running"
+  });
+});
+
+// دریافت پلن‌های اشتراک
+app.get("/plans", (req, res) => {
+  const plans = Object.values(PLANS).map(plan => ({
+    id: plan.id,
+    name: plan.name,
+    price: plan.price,
+    currency: plan.currency,
+    durationDays: plan.durationDays
+  }));
+
+  res.json({
+    success: true,
+    plans
+  });
+});
+
+// دریافت لینک پرداخت یک پلن
+app.post("/create-payment-link", (req, res) => {
+  const { planId } = req.body;
+
+  const plan = PLANS[planId];
+
+  if (!plan) {
+    return res.status(400).json({
+      success: false,
+      error: "پلن اشتراک معتبر نیست."
+    });
+  }
+
+  res.json({
+    success: true,
+    plan: {
+      id: plan.id,
+      name: plan.name,
+      price: plan.price,
+      currency: plan.currency
+    },
+    paymentLink: plan.paymentLink,
+    message: "لینک پرداخت آماده است."
+  });
+});
 
 // ذخیره موقت تصاویر رسید
 const uploadDir = path.join("/tmp", "begal-receipts");
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+
   filename: (req, file, cb) => {
     const ext = {
       "image/jpeg": ".jpg",
@@ -53,22 +142,19 @@ const upload = multer({
   }
 });
 
-// صفحه اصلی
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"));
-});
-
-// دریافت تصویر فیش پرداخت
+// دریافت تصویر رسید پرداخت
 app.post("/upload-receipt", (req, res) => {
   upload.single("receipt")(req, res, (err) => {
     if (err) {
       return res.status(400).json({
+        success: false,
         error: err.message || "خطا در دریافت تصویر"
       });
     }
 
     if (!req.file) {
       return res.status(400).json({
+        success: false,
         error: "لطفاً تصویر را انتخاب کنید."
       });
     }
@@ -80,10 +166,14 @@ app.post("/upload-receipt", (req, res) => {
   });
 });
 
-// بررسی پیام‌ها و تصاویر
+// بررسی پیام‌ها
 function validateMessages(messages) {
   if (!Array.isArray(messages) || messages.length === 0) {
     return "پیام‌ها معتبر نیستند.";
+  }
+
+  if (messages.length > 50) {
+    return "تعداد پیام‌ها بیش از حد مجاز است.";
   }
 
   for (const message of messages) {
@@ -97,6 +187,7 @@ function validateMessages(messages) {
       if (content.length > 20000) {
         return "متن پیام بیش از حد طولانی است.";
       }
+
       continue;
     }
 
@@ -106,8 +197,11 @@ function validateMessages(messages) {
 
     for (const item of content) {
       if (item.type === "text") {
-        if (typeof item.text !== "string") {
-          return "متن تصویر معتبر نیست.";
+        if (
+          typeof item.text !== "string" ||
+          item.text.length > 20000
+        ) {
+          return "متن پیام معتبر نیست.";
         }
       } else if (item.type === "image_url") {
         const url = item.image_url?.url;
@@ -131,7 +225,7 @@ function validateMessages(messages) {
   return null;
 }
 
-// اتصال به هوش مصنوعی با پشتیبانی درخواست تصویر
+// اتصال به هوش مصنوعی
 app.post("/chat", async (req, res) => {
   try {
     if (!process.env.AI_API_KEY) {
@@ -159,7 +253,7 @@ app.post("/chat", async (req, res) => {
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          messages: messages
+          messages
         })
       }
     );
@@ -169,8 +263,8 @@ app.post("/chat", async (req, res) => {
     if (!response.ok) {
       console.error("AI API error:", response.status);
 
-      return res.status(response.status).json({
-        error: "سرویس هوش مصنوعی درخواست را نپذیرفت. ممکن است تحلیل تصویر در این سرویس فعال نباشد."
+      return res.status(502).json({
+        error: "سرویس هوش مصنوعی درخواست را نپذیرفت."
       });
     }
 
@@ -187,13 +281,15 @@ app.post("/chat", async (req, res) => {
 
 // مدیریت خطاهای عمومی
 app.use((err, req, res, next) => {
-  console.error(err.message);
+  console.error("Server error:", err.message);
 
   res.status(500).json({
+    success: false,
     error: "خطای داخلی سرور بگال."
   });
 });
 
+// اجرای سرور
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Begal server started on port " + PORT);
 });
