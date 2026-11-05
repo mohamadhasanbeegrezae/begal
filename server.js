@@ -1,57 +1,56 @@
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const fs = require("fs");
-const path = require("path");
 const crypto = require("crypto");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// تنظیمات عمومی
 app.use(cors());
 app.use(express.json({ limit: "8mb" }));
 app.use(express.static(__dirname));
 
-// پلن‌های اشتراک بگال
 const PLANS = {
   monthly: {
-    id: "monthly",
     name: "اشتراک یک‌ماهه",
     price: 300000,
-    currency: "تومان",
-    durationDays: 30,
-    paymentLink:
-      "https://pay.pexn.ir/lTaNMIs/3000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal"
+    amount: 3000000,
+    days: 30
   },
-
   quarterly: {
-    id: "quarterly",
     name: "اشتراک سه‌ماهه",
     price: 500000,
-    currency: "تومان",
-    durationDays: 90,
-    paymentLink:
-      "https://pay.pexn.ir/lTaNMIs/5000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%D8%B3%D9%87%E2%80%8C%D9%85%D8%A7%D9%87%D9%87%20Begal"
+    amount: 5000000,
+    days: 90
   },
-
   yearly: {
-    id: "yearly",
     name: "اشتراک یک‌ساله",
     price: 1500000,
-    currency: "تومان",
-    durationDays: 365,
-    paymentLink:
-      "https://pay.pexn.ir/lTaNMIs/15000000?description=%D8%A7%D8%B4%D8%AA%D8%B1%D8%A7%DA%A9%20%DB%8C%DA%A9%E2%80%8C%D8%B3%D8%A7%D9%84%D9%87%20Begal"
+    amount: 15000000,
+    days: 365
   }
 };
 
-// صفحه اصلی
+const payments = new Map();
+const verifiedPayments = new Set();
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    cb(
+      null,
+      ["image/jpeg", "image/png", "image/webp"]
+        .includes(file.mimetype)
+    );
+  }
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// بررسی سلامت سرور
 app.get("/health", (req, res) => {
   res.json({
     success: true,
@@ -59,173 +58,194 @@ app.get("/health", (req, res) => {
   });
 });
 
-// دریافت پلن‌های اشتراک
 app.get("/plans", (req, res) => {
-  const plans = Object.values(PLANS).map(plan => ({
-    id: plan.id,
-    name: plan.name,
-    price: plan.price,
-    currency: plan.currency,
-    durationDays: plan.durationDays
-  }));
-
   res.json({
     success: true,
-    plans
+    plans: Object.entries(PLANS).map(([id, p]) => ({
+      id,
+      name: p.name,
+      price: p.price,
+      currency: "تومان",
+      durationDays: p.days
+    }))
   });
 });
 
-// دریافت لینک پرداخت یک پلن
-app.post("/create-payment-link", (req, res) => {
-  const { planId } = req.body;
+// ایجاد پرداخت
+app.post("/create-payment", async (req, res) => {
+  try {
+    const { planId, userId } = req.body;
 
-  const plan = PLANS[planId];
+    const plan = PLANS[planId];
 
-  if (!plan) {
+    if (!plan || typeof userId !== "string" || !userId.trim()) {
+      return res.status(400).json({
+        success: false,
+        error: "اطلاعات سفارش معتبر نیست."
+      });
+    }
+
+    if (!process.env.PAYEXA_API_KEY) {
+      return res.status(500).json({
+        success: false,
+        error: "کلید پرداخت تنظیم نشده است."
+      });
+    }
+
+    const orderId = crypto.randomUUID();
+
+    const response = await fetch(
+      "https://pay.pexn.ir/v2/payments",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.PAYEXA_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          amount: plan.amount,
+          order_id: orderId,
+          callback_url:
+            "https://begal.onrender.com/payexa-back"
+        })
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      return res.status(502).json({
+        success: false,
+        error: "ایجاد پرداخت ناموفق بود."
+      });
+    }
+
+    const paymentId = result.data.payment_id;
+
+    payments.set(String(paymentId), {
+      orderId,
+      userId: userId.trim(),
+      planId,
+      createdAt: Date.now()
+    });
+
+    res.json({
+      success: true,
+      paymentUrl: result.data.payment_url,
+      orderId
+    });
+
+  } catch (error) {
+    console.error("Payment error:", error.message);
+
+    res.status(500).json({
+      success: false,
+      error: "خطا در ایجاد پرداخت."
+    });
+  }
+});
+
+// بازگشت و تأیید پرداخت
+app.all("/payexa-back", async (req, res) => {
+  try {
+    const paymentId =
+      req.query.payment_id ||
+      req.body?.payment_id;
+
+    if (!paymentId) {
+      return res.status(400).send("شناسه پرداخت موجود نیست.");
+    }
+
+    const payment = payments.get(String(paymentId));
+
+    if (!payment) {
+      return res.status(404).send("سفارش پیدا نشد.");
+    }
+
+    if (verifiedPayments.has(String(paymentId))) {
+      return res.send("این پرداخت قبلاً تأیید شده است.");
+    }
+
+    const response = await fetch(
+      `https://pay.pexn.ir/v2/payments/${encodeURIComponent(paymentId)}/verify`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.PAYEXA_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({})
+      }
+    );
+
+    const result = await response.json();
+
+    if (!response.ok || !result.ok) {
+      return res.status(400).send("پرداخت تأیید نشد.");
+    }
+
+    if (result.data.first_verification !== true) {
+      return res.send("پرداخت قبلاً بررسی شده است.");
+    }
+
+    if (
+      String(result.data.order_id) !==
+      String(payment.orderId)
+    ) {
+      return res.status(400).send("شماره سفارش مطابقت ندارد.");
+    }
+
+    // فعال‌سازی اشتراک باید پس از اتصال Supabase انجام شود.
+    verifiedPayments.add(String(paymentId));
+
+    res.send(
+      "پرداخت با موفقیت تأیید شد. درخواست فعال‌سازی اشتراک ثبت شد."
+    );
+
+  } catch (error) {
+    console.error("Verification error:", error.message);
+
+    res.status(500).send("خطا در تأیید پرداخت.");
+  }
+});
+
+// دریافت تصویر در گفتگو
+app.post("/upload-image", upload.single("image"), (req, res) => {
+  if (!req.file) {
     return res.status(400).json({
       success: false,
-      error: "پلن اشتراک معتبر نیست."
+      error: "تصویر معتبر نیست."
     });
   }
 
   res.json({
     success: true,
-    plan: {
-      id: plan.id,
-      name: plan.name,
-      price: plan.price,
-      currency: plan.currency
-    },
-    paymentLink: plan.paymentLink,
-    message: "لینک پرداخت آماده است."
+    message: "تصویر دریافت شد."
   });
 });
 
-// ذخیره موقت تصاویر رسید
-const uploadDir = path.join("/tmp", "begal-receipts");
-fs.mkdirSync(uploadDir, { recursive: true });
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-
-  filename: (req, file, cb) => {
-    const ext = {
-      "image/jpeg": ".jpg",
-      "image/png": ".png",
-      "image/webp": ".webp"
-    }[file.mimetype] || ".img";
-
-    cb(null, crypto.randomUUID() + ext);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 5 * 1024 * 1024,
-    files: 1
-  },
-  fileFilter: (req, file, cb) => {
-    const allowed = [
-      "image/jpeg",
-      "image/png",
-      "image/webp"
-    ];
-
-    if (!allowed.includes(file.mimetype)) {
-      return cb(new Error("فقط JPG، PNG و WEBP مجاز است."));
-    }
-
-    cb(null, true);
-  }
-});
-
-// دریافت تصویر رسید پرداخت
-app.post("/upload-receipt", (req, res) => {
-  upload.single("receipt")(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({
-        success: false,
-        error: err.message || "خطا در دریافت تصویر"
-      });
-    }
-
-    if (!req.file) {
-      return res.status(400).json({
-        success: false,
-        error: "لطفاً تصویر را انتخاب کنید."
-      });
-    }
-
-    return res.status(202).json({
-      success: true,
-      message: "تصویر دریافت شد؛ پرداخت هنوز تأیید نشده است."
-    });
-  });
-});
-
-// بررسی پیام‌ها
+// اعتبارسنجی پیام‌ها
 function validateMessages(messages) {
   if (!Array.isArray(messages) || messages.length === 0) {
-    return "پیام‌ها معتبر نیستند.";
+    return false;
   }
 
-  if (messages.length > 50) {
-    return "تعداد پیام‌ها بیش از حد مجاز است.";
-  }
+  if (messages.length > 50) return false;
 
-  for (const message of messages) {
+  return messages.every(message => {
     if (!["user", "assistant"].includes(message.role)) {
-      return "نقش پیام معتبر نیست.";
+      return false;
     }
 
-    const content = message.content;
-
-    if (typeof content === "string") {
-      if (content.length > 20000) {
-        return "متن پیام بیش از حد طولانی است.";
-      }
-
-      continue;
+    if (typeof message.content === "string") {
+      return message.content.length <= 20000;
     }
 
-    if (!Array.isArray(content)) {
-      return "محتوای پیام معتبر نیست.";
-    }
-
-    for (const item of content) {
-      if (item.type === "text") {
-        if (
-          typeof item.text !== "string" ||
-          item.text.length > 20000
-        ) {
-          return "متن پیام معتبر نیست.";
-        }
-      } else if (item.type === "image_url") {
-        const url = item.image_url?.url;
-
-        if (
-          typeof url !== "string" ||
-          !/^data:image\/(jpeg|png|webp);base64,/.test(url)
-        ) {
-          return "تصویر معتبر نیست.";
-        }
-
-        if (url.length > 7 * 1024 * 1024) {
-          return "حجم تصویر بیش از حد مجاز است.";
-        }
-      } else {
-        return "نوع محتوای پیام پشتیبانی نمی‌شود.";
-      }
-    }
-  }
-
-  return null;
+    return Array.isArray(message.content);
+  });
 }
 
-// اتصال به هوش مصنوعی
+// اتصال هوش مصنوعی
 app.post("/chat", async (req, res) => {
   try {
     if (!process.env.AI_API_KEY) {
@@ -235,11 +255,10 @@ app.post("/chat", async (req, res) => {
     }
 
     const messages = req.body.messages;
-    const validationError = validateMessages(messages);
 
-    if (validationError) {
+    if (!validateMessages(messages)) {
       return res.status(400).json({
-        error: validationError
+        error: "پیام‌ها معتبر نیستند."
       });
     }
 
@@ -248,7 +267,7 @@ app.post("/chat", async (req, res) => {
       {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${process.env.AI_API_KEY}`,
+          Authorization: `Bearer ${process.env.AI_API_KEY}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -261,27 +280,24 @@ app.post("/chat", async (req, res) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.error("AI API error:", response.status);
-
       return res.status(502).json({
-        error: "سرویس هوش مصنوعی درخواست را نپذیرفت."
+        error: "ارتباط با هوش مصنوعی ناموفق بود."
       });
     }
 
-    return res.json(data);
+    res.json(data);
 
-  } catch (err) {
-    console.error("Chat error:", err.message);
+  } catch (error) {
+    console.error("AI error:", error.message);
 
-    return res.status(500).json({
-      error: "اتصال بگال به هوش مصنوعی ناموفق بود."
+    res.status(500).json({
+      error: "خطای ارتباط با هوش مصنوعی."
     });
   }
 });
 
-// مدیریت خطاهای عمومی
-app.use((err, req, res, next) => {
-  console.error("Server error:", err.message);
+app.use((error, req, res, next) => {
+  console.error(error.message);
 
   res.status(500).json({
     success: false,
@@ -289,7 +305,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// اجرای سرور
 app.listen(PORT, "0.0.0.0", () => {
   console.log("Begal server started on port " + PORT);
 });
