@@ -1,8 +1,7 @@
 const express = require("express");
 const cors = require("cors");
-const multer = require("multer");
-const crypto = require("crypto");
 const path = require("path");
+const crypto = require("crypto");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -14,38 +13,58 @@ app.use(express.static(__dirname));
 const PLANS = {
   monthly: {
     name: "اشتراک یک‌ماهه",
-    price: 300000,
     amount: 3000000,
     days: 30
   },
   quarterly: {
     name: "اشتراک سه‌ماهه",
-    price: 500000,
     amount: 5000000,
     days: 90
   },
   yearly: {
     name: "اشتراک یک‌ساله",
-    price: 1500000,
     amount: 15000000,
     days: 365
   }
 };
 
-const payments = new Map();
-const verifiedPayments = new Set();
+const required = [
+  "AI_API_KEY",
+  "PAYEXA_API_KEY",
+  "SUPABASE_URL",
+  "SUPABASE_SECRET_KEY"
+];
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter: (req, file, cb) => {
-    cb(
-      null,
-      ["image/jpeg", "image/png", "image/webp"]
-        .includes(file.mimetype)
-    );
+function checkConfig() {
+  return required.every(key => process.env[key]);
+}
+
+async function supabase(method, query, body) {
+  const url =
+    process.env.SUPABASE_URL +
+    "/rest/v1/subscriptions" +
+    query;
+
+  const response = await fetch(url, {
+    method,
+    headers: {
+      apikey: process.env.SUPABASE_SECRET_KEY,
+      Authorization:
+        "Bearer " + process.env.SUPABASE_SECRET_KEY,
+      "Content-Type": "application/json",
+      Prefer: "return=representation"
+    },
+    body: body ? JSON.stringify(body) : undefined
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error("Supabase database error");
   }
-});
+
+  return data;
+}
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
@@ -54,41 +73,34 @@ app.get("/", (req, res) => {
 app.get("/health", (req, res) => {
   res.json({
     success: true,
-    message: "Begal server is running"
+    message: "Begal is running"
   });
 });
 
 app.get("/plans", (req, res) => {
   res.json({
     success: true,
-    plans: Object.entries(PLANS).map(([id, p]) => ({
-      id,
-      name: p.name,
-      price: p.price,
-      currency: "تومان",
-      durationDays: p.days
-    }))
+    plans: PLANS
   });
 });
 
 // ایجاد پرداخت
 app.post("/create-payment", async (req, res) => {
   try {
-    const { planId, userId } = req.body;
-
-    const plan = PLANS[planId];
-
-    if (!plan || typeof userId !== "string" || !userId.trim()) {
-      return res.status(400).json({
+    if (!checkConfig()) {
+      return res.status(500).json({
         success: false,
-        error: "اطلاعات سفارش معتبر نیست."
+        error: "تنظیمات سرور کامل نیست."
       });
     }
 
-    if (!process.env.PAYEXA_API_KEY) {
-      return res.status(500).json({
+    const { planId, userId } = req.body;
+    const plan = PLANS[planId];
+
+    if (!plan || !userId) {
+      return res.status(400).json({
         success: false,
-        error: "کلید پرداخت تنظیم نشده است."
+        error: "اطلاعات سفارش نامعتبر است."
       });
     }
 
@@ -99,7 +111,8 @@ app.post("/create-payment", async (req, res) => {
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.PAYEXA_API_KEY}`,
+          Authorization:
+            `Bearer ${process.env.PAYEXA_API_KEY}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
@@ -120,13 +133,14 @@ app.post("/create-payment", async (req, res) => {
       });
     }
 
-    const paymentId = result.data.payment_id;
+    const paymentId = String(result.data.payment_id);
 
-    payments.set(String(paymentId), {
-      orderId,
-      userId: userId.trim(),
-      planId,
-      createdAt: Date.now()
+    await supabase("POST", "", {
+      user_id: userId,
+      status: "pending",
+      plan: planId,
+      payment_id: paymentId,
+      order_id: orderId
     });
 
     res.json({
@@ -136,7 +150,7 @@ app.post("/create-payment", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Payment error:", error.message);
+    console.error(error.message);
 
     res.status(500).json({
       success: false,
@@ -145,33 +159,51 @@ app.post("/create-payment", async (req, res) => {
   }
 });
 
-// بازگشت و تأیید پرداخت
+// تأیید پرداخت
 app.all("/payexa-back", async (req, res) => {
   try {
-    const paymentId =
+    const paymentId = String(
       req.query.payment_id ||
-      req.body?.payment_id;
+      req.body?.payment_id ||
+      ""
+    );
 
     if (!paymentId) {
-      return res.status(400).send("شناسه پرداخت موجود نیست.");
+      return res.status(400).send(
+        "شناسه پرداخت موجود نیست."
+      );
     }
 
-    const payment = payments.get(String(paymentId));
+    const rows = await supabase(
+      "GET",
+      "?payment_id=eq." +
+      encodeURIComponent(paymentId) +
+      "&select=*"
+    );
 
-    if (!payment) {
-      return res.status(404).send("سفارش پیدا نشد.");
+    if (!rows.length) {
+      return res.status(404).send(
+        "سفارش پیدا نشد."
+      );
     }
 
-    if (verifiedPayments.has(String(paymentId))) {
-      return res.send("این پرداخت قبلاً تأیید شده است.");
+    const payment = rows[0];
+
+    if (payment.status === "active") {
+      return res.send(
+        "اشتراک قبلاً فعال شده است."
+      );
     }
 
     const response = await fetch(
-      `https://pay.pexn.ir/v2/payments/${encodeURIComponent(paymentId)}/verify`,
+      "https://pay.pexn.ir/v2/payments/" +
+      encodeURIComponent(paymentId) +
+      "/verify",
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.PAYEXA_API_KEY}`,
+          Authorization:
+            `Bearer ${process.env.PAYEXA_API_KEY}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({})
@@ -181,130 +213,125 @@ app.all("/payexa-back", async (req, res) => {
     const result = await response.json();
 
     if (!response.ok || !result.ok) {
-      return res.status(400).send("پرداخت تأیید نشد.");
-    }
-
-    if (result.data.first_verification !== true) {
-      return res.send("پرداخت قبلاً بررسی شده است.");
+      return res.status(400).send(
+        "پرداخت تأیید نشد."
+      );
     }
 
     if (
       String(result.data.order_id) !==
-      String(payment.orderId)
+      String(payment.order_id)
     ) {
-      return res.status(400).send("شماره سفارش مطابقت ندارد.");
+      return res.status(400).send(
+        "شماره سفارش مطابقت ندارد."
+      );
     }
 
-    // فعال‌سازی اشتراک باید پس از اتصال Supabase انجام شود.
-    verifiedPayments.add(String(paymentId));
+    if (
+      result.data.first_verification !== true
+    ) {
+      return res.send(
+        "پرداخت قبلاً بررسی شده است."
+      );
+    }
+
+    const plan = PLANS[payment.plan];
+
+    if (!plan) {
+      return res.status(400).send(
+        "نوع اشتراک نامعتبر است."
+      );
+    }
+
+    const expires = new Date();
+    expires.setDate(
+      expires.getDate() + plan.days
+    );
+
+    await supabase(
+      "PATCH",
+      "?payment_id=eq." +
+      encodeURIComponent(paymentId),
+      {
+        status: "active",
+        expires_at: expires.toISOString()
+      }
+    );
 
     res.send(
-      "پرداخت با موفقیت تأیید شد. درخواست فعال‌سازی اشتراک ثبت شد."
+      "پرداخت تأیید شد و اشتراک فعال گردید."
     );
 
   } catch (error) {
-    console.error("Verification error:", error.message);
+    console.error(error.message);
 
-    res.status(500).send("خطا در تأیید پرداخت.");
+    res.status(500).send(
+      "خطا در تأیید پرداخت."
+    );
   }
 });
 
-// دریافت تصویر در گفتگو
-app.post("/upload-image", upload.single("image"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({
+// بررسی وضعیت اشتراک
+app.get("/subscription/:userId", async (req, res) => {
+  try {
+    const rows = await supabase(
+      "GET",
+      "?user_id=eq." +
+      encodeURIComponent(req.params.userId) +
+      "&status=eq.active&select=*"
+    );
+
+    const now = Date.now();
+
+    const active = rows.find(row =>
+      row.expires_at &&
+      new Date(row.expires_at).getTime() > now
+    );
+
+    res.json({
+      success: true,
+      active: !!active,
+      subscription: active || null
+    });
+
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      error: "تصویر معتبر نیست."
+      error: "خطا در بررسی اشتراک."
     });
   }
-
-  res.json({
-    success: true,
-    message: "تصویر دریافت شد."
-  });
 });
 
-// اعتبارسنجی پیام‌ها
-function validateMessages(messages) {
-  if (!Array.isArray(messages) || messages.length === 0) {
-    return false;
-  }
-
-  if (messages.length > 50) return false;
-
-  return messages.every(message => {
-    if (!["user", "assistant"].includes(message.role)) {
-      return false;
-    }
-
-    if (typeof message.content === "string") {
-      return message.content.length <= 20000;
-    }
-
-    return Array.isArray(message.content);
-  });
-}
-
-// اتصال هوش مصنوعی
+// هوش مصنوعی
 app.post("/chat", async (req, res) => {
   try {
-    if (!process.env.AI_API_KEY) {
-      return res.status(500).json({
-        error: "کلید هوش مصنوعی تنظیم نشده است."
-      });
-    }
-
-    const messages = req.body.messages;
-
-    if (!validateMessages(messages)) {
-      return res.status(400).json({
-        error: "پیام‌ها معتبر نیستند."
-      });
-    }
-
     const response = await fetch(
       "https://1xai.ir/v1/chat/completions",
       {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${process.env.AI_API_KEY}`,
+          Authorization:
+            `Bearer ${process.env.AI_API_KEY}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
           model: "gpt-4o-mini",
-          messages
+          messages: req.body.messages
         })
       }
     );
 
     const data = await response.json();
 
-    if (!response.ok) {
-      return res.status(502).json({
-        error: "ارتباط با هوش مصنوعی ناموفق بود."
-      });
-    }
-
-    res.json(data);
+    res.status(response.status).json(data);
 
   } catch (error) {
-    console.error("AI error:", error.message);
-
     res.status(500).json({
       error: "خطای ارتباط با هوش مصنوعی."
     });
   }
 });
 
-app.use((error, req, res, next) => {
-  console.error(error.message);
-
-  res.status(500).json({
-    success: false,
-    error: "خطای داخلی سرور بگال."
-  });
-});
-
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("Begal server started on port " + PORT);
+  console.log("Begal server running on " + PORT);
 });
